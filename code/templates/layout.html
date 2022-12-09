@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/styles.css" rel="stylesheet">
+    <link type="image/png" sizes="16x16" rel="icon" href="/static/icons8-calendar-16.png">
+    <title>BookIt</title>
+</head>
+<body>
+    <nav class="sidebar">
+        <h3>Welcome</h3>
+        <p>Here you can..</p>
+        <a class="navLink" href="/register">Register</a>
+        <!-- {% if session["user_id"] %}
+          <li class="nav-item"><a class="navLink" href="/logout">Log Out</a></li>
+        {% else %}
+          <li class="nav-item"><a class="navLink" href="/register">Register</a></li>
+        {% endif %} -->
+    </nav>
+
+    <main class="container">
+      <h2>
+        {% block title %}{% endblock %}
+      </h2>
+      {% block main %}{% endblock %}
+    </main>
+</body>
+</html>
