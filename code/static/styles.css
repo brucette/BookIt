@@ -19,6 +19,7 @@ Grey: #DAE1E7 */
 .container {
   border: 2px solid green;
   margin-left: 17vw;
+  width: 80%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,9 +47,10 @@ button {
   color: white;
   cursor: pointer;
   padding: 0.5rem;
-  border-radius: 20px;
+  border-radius: 40px;
   width: 5rem;
   border: 1px solid #1D4C82;
+  width: 6rem;
 }
 
 button:hover {
@@ -62,6 +64,10 @@ button:active {
   transform: translateY(3px);
 }
 
+a {
+  text-decoration: none;
+}
+
 .navLink {
   text-decoration: none;
   text-align: center;
@@ -71,6 +77,7 @@ button:active {
   width: 5rem;
   color: #DD6D4F;
   cursor: pointer;
+  width: 6rem;
 }
 
 .navLink:hover {
@@ -78,4 +85,62 @@ button:active {
   color: white;
   transition: 0.5s background-color ease-in-out;
   cursor: pointer;
+}
+
+ .cal-btn {
+  /* border: 1px solid #666; */
+  padding: 1.5rem 0;
+  width: 6rem;
+  height: 5rem;
+  text-align: center;
+  border: 1px solid #DD6D4F;
+  border-radius: 3px;
+} 
+
+.bookingLink:hover {
+  background-color: #DAE1E7;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.bookingLink {
+  padding: 3rem 3.9rem;
+  width: 5rem;
+  height: 4rem;
+  background-color: white;
+  color: black;
+  margin: 2px;
+}
+
+.timeslotsWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeslot {
+  width: 8rem;
+  padding: 0.5rem;
+  background-color: bisque;
+  color: #666;
+  margin: 1rem 0;
+  cursor: pointer;
+}
+
+.timeslot:hover {
+  background-color: #1D4C82;
+  color: aliceblue;
+  box-shadow: 0 0 11px rgba(33,33,33,.2);
+  /* transition: box-shadow .3s; */
+  -webkit-transform: translateY(-4px);
+	transform: translateY(-4px);
+  /* transition: 0.5s background-color ease-in-out; */
+}
+
+table {
+  border: 2px solid blue;
+  width: 70%;
+}
+
+th {
+  border: 2px dashed black;
 }

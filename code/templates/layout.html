@@ -12,12 +12,12 @@
     <nav class="sidebar">
         <h3>Welcome</h3>
         <p>Here you can..</p>
-        <a class="navLink" href="/register">Register</a>
-        <!-- {% if session["user_id"] %}
-          <li class="nav-item"><a class="navLink" href="/logout">Log Out</a></li>
+        <!-- <a class="navLink" href="/register">Register</a> -->
+        {% if session["user_id"] %}
+         <a class="navLink" href="/logout">Log Out</a>
         {% else %}
-          <li class="nav-item"><a class="navLink" href="/register">Register</a></li>
-        {% endif %} -->
+          <a class="navLink" href="/register">Register</a>
+        {% endif %}
     </nav>
 
     <main class="container">

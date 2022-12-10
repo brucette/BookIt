@@ -9,7 +9,7 @@ from helpers import apology, login_required, lookup
 
 # Configure application
 app = Flask(__name__)
-app.run(debug = True)
+# app.run(debug = True)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -20,19 +20,14 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 DATABASE = '/code/database.db'
+
 print("week days in row:", calendar.weekheader(3))
-print()
 print("number of first weekday, 0:", calendar.firstweekday())
-print()
 print("calendar.month:", calendar.month(2022, 12))
-print()
 print("calendar.monthcalendar:", calendar.monthcalendar(2022, 12))
-print()
 print("calendar.calendar", calendar.calendar(2022))
-print()
 day_of_the_week = calendar.weekday(2022, 12, 9)
 print("calendar.weekday", day_of_the_week)
-print()
 is_leap = calendar.isleap(2020)
 print("isleap", is_leap)
 print(calendar.month(2020, 12, 4)) 
@@ -43,13 +38,27 @@ def get_db():
     db = sqlite3.connect(DATABASE)
     return db
 
+
+@app.route('/dates')
+def dates():
+    currently = datetime.datetime.now()
+    month = currently.strftime("%B")
+    year = currently.year
+    dates = calendar.monthcalendar(year, currently.month)
+    return render_template("calendar.html", month=month, year=year, dates=dates)
+
+@app.route('/dayview')
+def dayview():
+    timeslots = ["10:30 - 13:30", "14:00 - 17:30", "18:30 - 23:00"]
+    return render_template("dayview.html", timeslots=timeslots)
+
 @app.route("/")
 # @login_required
 def index():
     return render_template("index.html")
 
 @app.route("/welcome")
-# @login_required
+@login_required
 def welcome():
     return render_template("welcome.html")
 
@@ -84,14 +93,14 @@ def login():
         # Ensure email exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0][2], request.form.get("password")):
             return apology("invalid email and/or password", 403)
-        else:
-          # Remember which user has logged in
-          session["user_id"] = rows[0][0]
+       
+        # Remember which user has logged in
+        session["user_id"] = rows[0][0]
 
         #   flash('You are now logged in')
 
           # Redirect user to home pgae
-          return redirect(url_for('welcome'))
+        return redirect("/welcome")
     
     # User reached route via GET (as by clicking a link or via redirect)
     else: 
@@ -194,14 +203,6 @@ def register():
         # Redirect user to home page
         return redirect("/welcome")
 
-# @app.route('/cal')
-# def index():
-#     cur = get_db().cursor()
-
-this_month = calendar.month(2022, 12)
-@app.route('/dates')
-def dates(this_month):
-    return render_template("calendar.html", this_month=this_month)
 
 @app.route('/confirmed')
 def confirmed():

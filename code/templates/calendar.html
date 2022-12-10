@@ -1,11 +1,47 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Calendar
+  Calendar
 {% endblock %}
 
 {% block main %}
-    <h1>What would you like to do?
-        {{this_month}}
-    </h1>
+<h1>What would you like to do?</h1>
+
+  <table>
+    <thead>
+      <tr class="year-header">
+        <h2>{{ month }}  {{ year }}</h2>
+      </tr>
+      <tr class="week-header">
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+        <th>Sat</th>
+        <th>Sun</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for item in dates %}
+        <tr>
+          {% for element in item %}
+
+            {% if element == 0 %}
+              <td class="cal-btn">
+                <a href="">{{' '}}</a>
+              </td>
+            {% else %}
+              <td class="cal-btn">
+                <a class="bookingLink" href="/dayview">{{ element }}</a>
+              </td>
+            {% endif %}
+
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
 {% endblock %}
