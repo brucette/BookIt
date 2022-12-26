@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+  <div class="timeslotsWrapper">
+    <h4>Your time:</h4>
+    <form action="/confirm" method="post">
+
+        <!-- <p id="confirmDay"></p>
+        <p id="confirmTime"></p> -->
+        <input hidden id="done" name="done" value=""/>
+
+        <input readonly id="confirmDay" name="confirmDay" value="" class="disabledInput" />
+        <input readonly id="confirmTime" name="confirmTime" value="" class="disabledInput" />
+
+        <button type="submit" class="confirm">Confirm</button>
+    </form>
+    
+
+    
+  </div>
+
+  <a class="navLink" href="/dayview" id="backToDay">Go back</a>
+    
+{% endblock %}

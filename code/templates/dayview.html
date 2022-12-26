@@ -1,19 +1,24 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Times
+
 {% endblock %}
 
 
 {% block main %}
-  <h1>Day times</h1>
+  <h2>Pick a timeslot</h2>
 
   <div class="timeslotsWrapper">
     {% for timeslot in timeslots %}
-      <button class="timeslot">{{ timeslot }}</button>
+      
+      <a href="/confirm">
+        <button class="timeslot">{{ timeslot }}</button>
+      </a>
     {% endfor %}
-
-    <a class="navLink" href="/dates">Go back</a>
   </div>
+   
+
+  <a class="navLink" href="/dates" id="backToCal">Go back</a>
+  
     
 {% endblock %}

@@ -7,6 +7,7 @@ import time
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required, lookup
 
+
 # Configure application
 app = Flask(__name__)
 # app.run(debug = True)
@@ -21,16 +22,15 @@ Session(app)
 
 DATABASE = '/code/database.db'
 
-print("week days in row:", calendar.weekheader(3))
-print("number of first weekday, 0:", calendar.firstweekday())
-print("calendar.month:", calendar.month(2022, 12))
-print("calendar.monthcalendar:", calendar.monthcalendar(2022, 12))
-print("calendar.calendar", calendar.calendar(2022))
-day_of_the_week = calendar.weekday(2022, 12, 9)
-print("calendar.weekday", day_of_the_week)
-is_leap = calendar.isleap(2020)
-print("isleap", is_leap)
+
 print(calendar.month(2020, 12, 4)) 
+print('TODAY:', datetime.date.today())
+print('TODAY:', datetime.datetime.day)
+cal= calendar.Calendar()
+#print('YEARDATES:', cal.yeardatescalendar(2022))
+
+
+timeslots = ["10:30 - 13:30", "14:00 - 17:30", "18:30 - 23:00"]
 
 def get_db():
     # db = getattr(g, '_database', None)
@@ -41,16 +41,25 @@ def get_db():
 
 @app.route('/dates')
 def dates():
-    currently = datetime.datetime.now()
+    currently = datetime.date.today()
+    today = currently.day
     month = currently.strftime("%B")
     year = currently.year
     dates = calendar.monthcalendar(year, currently.month)
-    return render_template("calendar.html", month=month, year=year, dates=dates)
+    return render_template("calendar.html", today=today, month=month, year=year, dates=dates)
 
 @app.route('/dayview')
 def dayview():
-    timeslots = ["10:30 - 13:30", "14:00 - 17:30", "18:30 - 23:00"]
     return render_template("dayview.html", timeslots=timeslots)
+
+@app.route('/confirm', methods=["GET", "POST"])
+def confirm():
+    if request.method == "GET":
+      return render_template("confirm.html")
+    else:
+      booking_time = request.form.get("confirmTime")
+      booking_date = request.form.get('confirmDay')
+      return render_template("confirmed.html", booking_time=booking_time, booking_date=booking_date)    
 
 @app.route("/")
 # @login_required
@@ -60,7 +69,15 @@ def index():
 @app.route("/welcome")
 @login_required
 def welcome():
-    return render_template("welcome.html")
+    # Query database for user's name
+    db = get_db()
+    query = f'SELECT first_name FROM users WHERE id="{session["user_id"]}"'
+    result = db.execute(query) 
+    user = result.fetchone()
+    
+    # Close the connection
+    db.close()
+    return render_template("welcome.html", user=user)
 
 # LOGIN ROUTE
 @app.route("/login", methods=["GET", "POST"])
@@ -135,12 +152,6 @@ def register():
         last_name = request.form.get("last_name")
         apartment = request.form.get("apartment")
 
-        data = [email, password, first_name, last_name, apartment]
-
-        # for i in data:
-        #     if not i:
-        #         return apology('must provide {i}')
-
         # Ensure email was submitted
         if not email:
             return apology("must provide email")
@@ -205,8 +216,24 @@ def register():
 
 
 @app.route('/confirmed')
+@login_required
 def confirmed():
-    return 'Your booking was made'
+
+    # Insert booking into users booking table
+
+    # Check if the table exists
+    # If not then create one
+    
+    #db = get_db()
+
+    # Create cursor object
+    #cursor_obj = db.cursor()
+
+    #query1 = f'CREATE TABLE IF NOT EXISTS user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, FOREIGN KEY(email) REFERENCES users(email), booking_time TEXT NOT NULL, booking_date TEXT NOT NULL, done TEXT NOT NULL ) '
+
+    #query2 = f'INSERT INTO user_bookings (email, booking_time, booking_date, done) VALUES ("{email}", "{booking_time}", "{booking_date}", "{done}")'
+
+    return render_template("confirmed.html")
 
 @app.route('/userpage')
 def userpage():
@@ -218,3 +245,9 @@ app.run(host='0.0.0.0')
 # CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, hash TEXT NOT NULL, apartment NUMERIC NOT NULL);
 # CREATE UNIQUE INDEX email ON users(email);
 # CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, hash TEXT NOT NULL, first_name TEXT NOT NULL, last_name TEXT NOT NULL, apartment INT NOT NULL);
+
+#   {% if timeslot.booked == True %}
+#         <a href="/confirm">
+#           <button class="timeslot deative" disabled>{{ timeslot }}</button>
+#         </a>
+#       {% else %}

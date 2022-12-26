@@ -25,10 +25,16 @@ Grey: #DAE1E7 */
   align-items: center;
 }
 
-.start-image {
-  height: 20vh;
-  width: 30vw;
-  border: 2px solid rgb(36, 0, 128);
+.checkbox {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  border: 2px green solid;
+}
+
+.rooftop {
+  height: 55vh;
+  border-radius: 10px;
   margin: 2rem;
 }
 
@@ -80,6 +86,15 @@ a {
   width: 6rem;
 }
 
+.filled {
+  background-color: #DD6D4F;
+  color: white;
+  width: 12rem;
+  margin: 1rem;
+  padding: 1rem;
+  font-size: larger;
+}
+
 .navLink:hover {
   background-color: #DD6D4F;
   color: white;
@@ -87,12 +102,16 @@ a {
   cursor: pointer;
 }
 
+.filled:hover {
+  size: 1.5;
+}
  .cal-btn {
   /* border: 1px solid #666; */
   padding: 1.5rem 0;
   width: 6rem;
   height: 5rem;
   text-align: center;
+  font-weight: bold;
   border: 1px solid #DD6D4F;
   border-radius: 3px;
 } 
@@ -108,13 +127,19 @@ a {
   width: 5rem;
   height: 4rem;
   background-color: white;
-  color: black;
+  color: #1D4C82;
   margin: 2px;
+}
+
+.today {
+  color: #DD6D4F;
+  font-size: larger;
 }
 
 .timeslotsWrapper {
   display: flex;
   flex-direction: column;
+  margin-bottom: 2rem;
 }
 
 .timeslot {
@@ -134,6 +159,12 @@ a {
   -webkit-transform: translateY(-4px);
 	transform: translateY(-4px);
   /* transition: 0.5s background-color ease-in-out; */
+}
+
+.disabledInput {
+  border: none;
+  background-color: white;
+  color: black;
 }
 
 table {

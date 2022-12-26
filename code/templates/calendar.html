@@ -5,12 +5,11 @@
 {% endblock %}
 
 {% block main %}
-<h1>What would you like to do?</h1>
 
   <table>
     <thead>
       <tr class="year-header">
-        <h2>{{ month }}  {{ year }}</h2>
+        <h2 class="month-year">{{ month }}  {{ year }}</h2>
       </tr>
       <tr class="week-header">
         <th>Mon</th>
@@ -30,8 +29,13 @@
 
             {% if element == 0 %}
               <td class="cal-btn">
-                <a href="">{{' '}}</a>
+                <a href="#">{{' '}}</a>
               </td>
+            {% elif element == today %}
+              <td class="cal-btn">
+                <!-- <a class="bookingLink today" href="/dayview" onclick="return calendarBtnClick(element)">{{ element }}</a> -->
+                <a class="bookingLink today" href="/dayview">{{ element }}</a>
+              </td>  
             {% else %}
               <td class="cal-btn">
                 <a class="bookingLink" href="/dayview">{{ element }}</a>
