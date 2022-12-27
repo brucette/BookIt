@@ -58,8 +58,36 @@ def confirm():
       return render_template("confirm.html")
     else:
       booking_time = request.form.get("confirmTime")
-      booking_date = request.form.get('confirmDay')
-      return render_template("confirmed.html", booking_time=booking_time, booking_date=booking_date)    
+      booking_date = request.form.get("confirmDay")
+      current_user = session["user_id"]
+
+      # Insert booking into users booking table:
+
+      db = get_db()
+
+      # Create cursor object
+      cursor_obj1 = db.cursor()
+      query1 = f'SELECT email FROM users WHERE id="{current_user}"'
+      result = cursor_obj1.execute(query1)
+      email = result.fetchall()
+
+      # Check if the table exists, if not then create one
+      cursor_obj2 = db.cursor()
+      query2 = f'CREATE TABLE IF NOT EXISTS user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, booking_time TEXT NOT NULL, booking_date TEXT NOT NULL ) '
+      cursor_obj2.execute(query2)
+      #FOREIGN KEY(email) REFERENCES users(email),
+      # Finally, insert the new booking into the bookings table
+      cursor_obj3 = db.cursor()
+      query3 = f'INSERT INTO user_bookings (email, booking_time, booking_date) VALUES ("{email}", "{booking_time}", "{booking_date}")'
+      cursor_obj3.execute(query3)
+      
+      # Commit the command
+      db.commit()
+
+      # Close the connection
+      db.close()
+
+      return render_template("confirmed.html", booking_time=booking_time, booking_date=booking_date, current_user=current_user, email=email)    
 
 @app.route("/")
 # @login_required
@@ -218,21 +246,6 @@ def register():
 @app.route('/confirmed')
 @login_required
 def confirmed():
-
-    # Insert booking into users booking table
-
-    # Check if the table exists
-    # If not then create one
-    
-    #db = get_db()
-
-    # Create cursor object
-    #cursor_obj = db.cursor()
-
-    #query1 = f'CREATE TABLE IF NOT EXISTS user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, FOREIGN KEY(email) REFERENCES users(email), booking_time TEXT NOT NULL, booking_date TEXT NOT NULL, done TEXT NOT NULL ) '
-
-    #query2 = f'INSERT INTO user_bookings (email, booking_time, booking_date, done) VALUES ("{email}", "{booking_time}", "{booking_date}", "{done}")'
-
     return render_template("confirmed.html")
 
 @app.route('/userpage')
@@ -245,6 +258,7 @@ app.run(host='0.0.0.0')
 # CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, hash TEXT NOT NULL, apartment NUMERIC NOT NULL);
 # CREATE UNIQUE INDEX email ON users(email);
 # CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, hash TEXT NOT NULL, first_name TEXT NOT NULL, last_name TEXT NOT NULL, apartment INT NOT NULL);
+# status TEXT DEFAULT "upcoming" NOT NULL 
 
 #   {% if timeslot.booked == True %}
 #         <a href="/confirm">
