@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Your bookings
+{% endblock %}
+
+{% block main %}
+    <table>
+      <thead>
+        <tr>
+          <th>Booking number</th>
+          <th>Time</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in bookings %}
+        <tr class="row">
+            <td>{{ item[0] }}</td>
+            <td>{{ item[2] }}</td>
+            <td>{{ item[3] }} </td>
+            {% if item[3] > current_date %}
+              <td>
+                <button class="cancel" type="button">cancel</button>
+              </td>
+            {% elif item[3] == current_date %}
+              <td class="today">
+                today
+              </td>
+            {% else %}
+              <td class="complete">
+                completed
+              </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <a class="navLink filled" href="/userpage">View my bookings</a>
+    <a class="navLink filled" href="/logout">Make a booking</a>
+{% endblock %}
+

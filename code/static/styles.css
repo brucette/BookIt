@@ -105,6 +105,7 @@ a {
 .filled:hover {
   size: 1.5;
 }
+
  .cal-btn {
   /* border: 1px solid #666; */
   padding: 1.5rem 0;
@@ -165,6 +166,12 @@ a {
   border: none;
   background-color: white;
   color: black;
+}
+
+.row {
+  padding: 0.8rem 0;
+  height: 2.5rem;
+  text-align: center;
 }
 
 table {

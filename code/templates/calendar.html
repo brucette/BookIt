@@ -5,11 +5,12 @@
 {% endblock %}
 
 {% block main %}
-
+<h1>{{ today, month, year }}</h1>
   <table>
     <thead>
       <tr class="year-header">
-        <h2 class="month-year">{{ month }}  {{ year }}</h2>
+          <h2 class="month">{{ month }}</h2>
+          <h2 class="year">{{ year }}</h2>
       </tr>
       <tr class="week-header">
         <th>Mon</th>

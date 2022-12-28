@@ -1,6 +1,13 @@
-let month = document.querySelector(".month-year")
+
+
+let month = document.querySelector(".month")
 if (month) {
-  localStorage.setItem('monthYear', month.innerHTML);
+  localStorage.setItem('month', month.innerHTML);
+} 
+
+let year = document.querySelector(".year")
+if (year) {
+  localStorage.setItem('year', year.innerHTML);
 } 
 
 let bookingLinks = document.querySelectorAll(".bookingLink")
@@ -38,11 +45,26 @@ if (backToDay) {
     localStorage.removeItem('selectedTime');
   })
 }
-    
-console.log(localStorage.getItem('selectedDate') )
-let confirmedDay = localStorage.getItem('selectedDate')
-let confirmedmonthYear = localStorage.getItem('monthYear')
+
+let confirmedDay = localStorage.getItem('selectedDate') //parseInt()
+console.log('typeof confirmedDay:', typeof confirmedDay)
+
+let confirmedMonth = localStorage.getItem('month')
+console.log('month is:', confirmedMonth)
+
+let confirmedYear = localStorage.getItem('year') //parseInt()
+console.log('typeof confirmedYear:', typeof confirmedYear)
+
 let confirmedTime = localStorage.getItem('selectedTime')
 
-document.getElementById("confirmDay").value =  confirmedDay + ' ' + confirmedmonthYear
+function getMonthNumberFromName(monthName) {
+  return new Date(`${monthName} 1, 2022`).getMonth();
+}
+
+let monthNumber = getMonthNumberFromName(confirmedMonth)
+console.log('monthNUM is:', monthNumber)
+
+document.getElementById("confirmDay").value = confirmedDay + '/' + (monthNumber+1).toString() + '/' + confirmedYear
+// document.getElementById("confirmDay").value = confirmedDay + ' ' + confirmedMonth + ' ' + confirmedYear
+// document.getElementById("confirmDay").value = new Date(confirmedYear, monthNumber, confirmedDay)
 document.getElementById("confirmTime").value = confirmedTime

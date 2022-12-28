@@ -1,12 +1,12 @@
 from flask import Flask, redirect, render_template, session, request, g, flash, url_for
 from flask_session import Session
-import sqlite3 
+import sqlite3
 import calendar
 import datetime
 import time
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required, lookup
-
+from os.path import exists 
 
 # Configure application
 app = Flask(__name__)
@@ -22,6 +22,8 @@ Session(app)
 
 DATABASE = '/code/database.db'
 
+def get_db():
+    return sqlite3.connect(DATABASE)
 
 print(calendar.month(2020, 12, 4)) 
 print('TODAY:', datetime.date.today())
@@ -29,14 +31,35 @@ print('TODAY:', datetime.datetime.day)
 cal= calendar.Calendar()
 #print('YEARDATES:', cal.yeardatescalendar(2022))
 
-
 timeslots = ["10:30 - 13:30", "14:00 - 17:30", "18:30 - 23:00"]
 
-def get_db():
-    # db = getattr(g, '_database', None)
-    # if db is None:
-    db = sqlite3.connect(DATABASE)
-    return db
+
+def __init_db(DATABASE):                                      
+    """Create database schema if application is started for the first time""" 
+    if exists(DATABASE):                                      
+        return   
+
+    db = get_db()
+    cursor = db.cursor()
+    create_users_table = "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\
+            email TEXT NOT NULL,\
+            hash TEXT NOT NULL,\
+            first_name TEXT NOT NULL,\
+            last_name TEXT NOT NULL, \
+            apartment INT NOT NULL)"
+
+    cursor.execute(create_users_table)
+
+    cursor.execute("CREATE UNIQUE INDEX email ON users(email)")
+
+    create_bookings_table = "CREATE TABLE user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\
+            email TEXT NOT NULL, \
+            booking_time TEXT NOT NULL, \
+            booking_date TEXT NOT NULL)"
+    cursor.execute(create_bookings_table)
+
+    db.commit()
+    db.close()
 
 
 @app.route('/dates')
@@ -56,38 +79,31 @@ def dayview():
 def confirm():
     if request.method == "GET":
       return render_template("confirm.html")
-    else:
-      booking_time = request.form.get("confirmTime")
-      booking_date = request.form.get("confirmDay")
-      current_user = session["user_id"]
+    
+    booking_time = request.form.get("confirmTime")
+    booking_date = request.form.get("confirmDay")
+    current_user = session["user_id"]
 
-      # Insert booking into users booking table:
+    # Insert booking into users booking table:
 
-      db = get_db()
+    db = get_db()
 
-      # Create cursor object
-      cursor_obj1 = db.cursor()
-      query1 = f'SELECT email FROM users WHERE id="{current_user}"'
-      result = cursor_obj1.execute(query1)
-      email = result.fetchall()
+    query1 = f'SELECT email FROM users WHERE id="{session["user_id"]}"'
+    result = db.execute(query1)
+    email = result.fetchone()
 
-      # Check if the table exists, if not then create one
-      cursor_obj2 = db.cursor()
-      query2 = f'CREATE TABLE IF NOT EXISTS user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, booking_time TEXT NOT NULL, booking_date TEXT NOT NULL ) '
-      cursor_obj2.execute(query2)
-      #FOREIGN KEY(email) REFERENCES users(email),
-      # Finally, insert the new booking into the bookings table
-      cursor_obj3 = db.cursor()
-      query3 = f'INSERT INTO user_bookings (email, booking_time, booking_date) VALUES ("{email}", "{booking_time}", "{booking_date}")'
-      cursor_obj3.execute(query3)
-      
-      # Commit the command
-      db.commit()
+    # Insert the new booking into the bookings table
+    cursor_obj3 = db.cursor()
+    query3 = f'INSERT INTO user_bookings (email, booking_time, booking_date) VALUES ("{email}", "{booking_time}", "{booking_date}")'
+    cursor_obj3.execute(query3)
+    
+    # Commit the command
+    db.commit()
 
-      # Close the connection
-      db.close()
+    # Close the connection
+    db.close()
 
-      return render_template("confirmed.html", booking_time=booking_time, booking_date=booking_date, current_user=current_user, email=email)    
+    return render_template("confirmed.html", booking_time=booking_time, booking_date=booking_date, current_user=current_user, email=email)    
 
 @app.route("/")
 # @login_required
@@ -100,7 +116,7 @@ def welcome():
     # Query database for user's name
     db = get_db()
     query = f'SELECT first_name FROM users WHERE id="{session["user_id"]}"'
-    result = db.execute(query) 
+    result = db.execute(query)
     user = result.fetchone()
     
     # Close the connection
@@ -129,7 +145,7 @@ def login():
         # Query database for email
         db = get_db()
         query = f'SELECT * FROM users WHERE email="{request.form.get("email")}"'
-        result = db.execute(query) 
+        result = db.execute(query)
         rows = result.fetchall()
         
         # Close the connection
@@ -148,8 +164,7 @@ def login():
         return redirect("/welcome")
     
     # User reached route via GET (as by clicking a link or via redirect)
-    else: 
-        return render_template("login.html")
+    return render_template("login.html")
 
 # LOGOUT ROUTE
 @app.route("/logout")
@@ -204,22 +219,17 @@ def register():
         if not apartment:
             return apology("must provide apartment number")
 
-    print(password)
     hash_password = generate_password_hash(password)
-    print("hash is", hash_password)
 
     # Insert new user into USERS table
     try:
         # Ensure email not already registered
-        # db.execute("INSERT INTO users (email, hash) VALUES (?, ?)", email, hash_password)
-        db = get_db() 
+        db = get_db()
 
         # Create cursor object
         cursor_obj = db.cursor()
 
         query = f'INSERT INTO users (hash, email, first_name, last_name, apartment) VALUES ("{hash_password}", "{email}", "{first_name}", "{last_name}", "{apartment}")'
-
-        print(query)
 
         cursor_obj.execute(query)
 
@@ -233,7 +243,6 @@ def register():
         return apology("email is already registered")
     else:
         db = get_db()
-        #cursor_obj = db.cursor()
         query = f'SELECT id FROM users WHERE email="{email}"'
         result = db.execute(query)
         session["user_id"] = result.fetchall()
@@ -250,18 +259,40 @@ def confirmed():
 
 @app.route('/userpage')
 def userpage():
-    return 'Show users old and upcoming bookings in separate lists'
+    # Get all of users bookings
 
+    db = get_db()
+    # Get users email
+    query1 = f'SELECT email FROM users WHERE id="{session["user_id"]}"'
+    result1 = db.execute(query1)
+    email = result1.fetchone()
+
+    # Get users bookings
+    query2 = f'SELECT * FROM user_bookings WHERE email="{email}"'
+    result2 = db.execute(query2)
+    bookings = result2.fetchall()
+
+    # Commit the command
+    db.commit()
+
+    # Close the connection
+    db.close()
+
+    currently = datetime.date.today()
+    today = str(currently.day)
+    month = str(currently.month)
+    year = str(currently.year)
+    current_date = today + "/" + month + "/" + year
+
+    # current_time = datetime.datetime.now().strftime("%H:%M:%S")
+
+    return render_template("bookings.html", current_date=current_date, bookings=bookings, today=today, month=month, year=year)
+
+__init_db(DATABASE)
 app.run(host='0.0.0.0')
 
 
-# CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, hash TEXT NOT NULL, apartment NUMERIC NOT NULL);
+
 # CREATE UNIQUE INDEX email ON users(email);
 # CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, hash TEXT NOT NULL, first_name TEXT NOT NULL, last_name TEXT NOT NULL, apartment INT NOT NULL);
-# status TEXT DEFAULT "upcoming" NOT NULL 
-
-#   {% if timeslot.booked == True %}
-#         <a href="/confirm">
-#           <button class="timeslot deative" disabled>{{ timeslot }}</button>
-#         </a>
-#       {% else %}
+# 
