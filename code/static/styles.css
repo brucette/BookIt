@@ -17,7 +17,7 @@ Grey: #DAE1E7 */
 }
 
 .container {
-  border: 2px solid green;
+  /* border: 2px solid green; */
   margin-left: 17vw;
   width: 80%;
   display: flex;
@@ -29,7 +29,7 @@ Grey: #DAE1E7 */
   width: 10rem;
   height: 10rem;
   border-radius: 50%;
-  border: 2px green solid;
+  /* border: 2px green solid; */
 }
 
 .rooftop {
@@ -72,6 +72,28 @@ button:active {
 
 a {
   text-decoration: none;
+}
+
+.back-or-forward {
+  display: flex;
+  /* border: 2px red solid; */
+  width: 70%;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.forward {
+  color: #DD6D4F;
+  cursor: pointer;
+  letter-spacing:5px;
+  font-weight: bold;
+}
+
+.back {
+  color: #DD6D4F;
+  cursor: pointer;
+  letter-spacing:5px;
+  font-weight: bold;
 }
 
 .navLink {
@@ -123,7 +145,7 @@ a {
   cursor: pointer;
 }
 
-.bookingLink {
+.bookingLink, .deactiveLink {
   padding: 3rem 3.9rem;
   width: 5rem;
   height: 4rem;
@@ -135,6 +157,15 @@ a {
 .today {
   color: #DD6D4F;
   font-size: larger;
+}
+
+.confirmation-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.confirm {
+ margin: 1rem 0;
 }
 
 .timeslotsWrapper {
@@ -161,11 +192,19 @@ a {
 	transform: translateY(-4px);
   /* transition: 0.5s background-color ease-in-out; */
 }
+.inputwrap{
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 1rem;
+  box-shadow:  10px 5px 5px #666;
+}
 
 .disabledInput {
   border: none;
   background-color: white;
   color: black;
+  display: block;
+  margin: 1rem 0;
 }
 
 .row {
@@ -174,11 +213,20 @@ a {
   text-align: center;
 }
 
+.month, .year {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+
+
 table {
-  border: 2px solid blue;
+  /* border: 2px solid blue; */
   width: 70%;
 }
 
 th {
-  border: 2px dashed black;
+  border: 1px solid gray;
+  border-radius: 3px;
 }

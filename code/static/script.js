@@ -2,31 +2,46 @@
 
 let month = document.querySelector(".month")
 if (month) {
-  localStorage.setItem('month', month.innerHTML);
+  localStorage.setItem("month", month.innerHTML);
 } 
 
 let year = document.querySelector(".year")
 if (year) {
-  localStorage.setItem('year', year.innerHTML);
+  localStorage.setItem("year", year.innerHTML);
 } 
 
 let bookingLinks = document.querySelectorAll(".bookingLink")
-
 let times = document.querySelectorAll(".timeslot")
+let cancelButtons = document.querySelectorAll(".cancel")
+const nextButton = document.querySelector(".next")
+
+// Event listener for cancel button for a booking
+cancelButtons.forEach((button) => {
+  button.addEventListener("click", function() {
+    localStorage.setItem("canceledBooking", button.id);
+    window.alert("OK!")
+    console.log("month")
+  })
+})
+
+// nextButton.addEventListener("click", function() {
+//   window.alert("OK!")
+//   console.log("month")
+// })
 
 // Add event listener to all days on the calendar view
 bookingLinks.forEach((bookingLink) => {
   bookingLink.addEventListener("click",  function() {
-    localStorage.setItem('selectedDate', bookingLink.innerHTML);
-    console.log('selected:', localStorage.getItem('selectedDate'));
+    localStorage.setItem("selectedDate", bookingLink.innerHTML);
+    console.log('selected:', localStorage.getItem("selectedDate"));
   })
 })
 
 // Add event listener to the three different timeslots
 times.forEach((time) => {
   time.addEventListener("click",  function() {
-    localStorage.setItem('selectedTime', time.innerHTML);
-        console.log('selected:', localStorage.getItem('selectedTime'));
+    localStorage.setItem("selectedTime", time.innerHTML);
+        console.log('selected:', localStorage.getItem("selectedTime"));
     })
 })
 
@@ -34,7 +49,7 @@ times.forEach((time) => {
 let backToCal = document.getElementById("backToCal")
 if (backToCal) {
   backToCal.addEventListener("click", function() {
-    localStorage.removeItem('selectedDate');
+    localStorage.removeItem("selectedDate");
   })
 }
 
@@ -42,20 +57,20 @@ if (backToCal) {
 let backToDay = document.getElementById("backToDay")
 if (backToDay) {
   backToDay.addEventListener("click", function() {
-    localStorage.removeItem('selectedTime');
+    localStorage.removeItem("selectedTime");
   })
 }
 
-let confirmedDay = localStorage.getItem('selectedDate') //parseInt()
+let confirmedDay = localStorage.getItem("selectedDate") //parseInt()
 console.log('typeof confirmedDay:', typeof confirmedDay)
 
-let confirmedMonth = localStorage.getItem('month')
+let confirmedMonth = localStorage.getItem("month")
 console.log('month is:', confirmedMonth)
 
-let confirmedYear = localStorage.getItem('year') //parseInt()
+let confirmedYear = localStorage.getItem("year") //parseInt()
 console.log('typeof confirmedYear:', typeof confirmedYear)
 
-let confirmedTime = localStorage.getItem('selectedTime')
+let confirmedTime = localStorage.getItem("selectedTime")
 
 function getMonthNumberFromName(monthName) {
   return new Date(`${monthName} 1, 2022`).getMonth();
@@ -68,3 +83,5 @@ document.getElementById("confirmDay").value = confirmedDay + '/' + (monthNumber+
 // document.getElementById("confirmDay").value = confirmedDay + ' ' + confirmedMonth + ' ' + confirmedYear
 // document.getElementById("confirmDay").value = new Date(confirmedYear, monthNumber, confirmedDay)
 document.getElementById("confirmTime").value = confirmedTime
+
+

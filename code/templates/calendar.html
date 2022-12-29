@@ -5,13 +5,22 @@
 {% endblock %}
 
 {% block main %}
-<h1>{{ today, month, year }}</h1>
+<!-- <h1>{{ today, monthName, year }}</h1> -->
+
+<h2 class="month">{{ monthName }}</h2>
+<h2 class="year">{{ year }}</h2>
+
+<div class="back-or-forward">
+  <a class="back"><<<<</a>
+  <a class="forward">>>>></a>
+</div>
+  
   <table>
     <thead>
-      <tr class="year-header">
-          <h2 class="month">{{ month }}</h2>
-          <h2 class="year">{{ year }}</h2>
-      </tr>
+      <!-- <tr>
+          <th class="month-header"><h2 class="month">{{ monthName }}</h2></th>
+          <th class="year-header"><h2 class="year">{{ year }}</h2></th>
+      </tr> -->
       <tr class="week-header">
         <th>Mon</th>
         <th>Tue</th>
@@ -24,7 +33,7 @@
     </thead>
 
     <tbody>
-      {% for item in dates %}
+      {% for item in month %}
         <tr>
           {% for element in item %}
 
@@ -32,9 +41,12 @@
               <td class="cal-btn">
                 <a href="#">{{' '}}</a>
               </td>
+            {% elif element < today %}
+              <td class="cal-btn">
+                <a class="deactiveLink" href="#">{{ element }}</a>
+              </td>
             {% elif element == today %}
               <td class="cal-btn">
-                <!-- <a class="bookingLink today" href="/dayview" onclick="return calendarBtnClick(element)">{{ element }}</a> -->
                 <a class="bookingLink today" href="/dayview">{{ element }}</a>
               </td>  
             {% else %}

@@ -1,12 +1,12 @@
-from flask import Flask, redirect, render_template, session, request, g, flash, url_for
-from flask_session import Session
+""" A flask based booking system with multi user support """
 import sqlite3
 import calendar
 import datetime
-import time
+from os.path import exists
+from flask import Flask, redirect, render_template, session, request
+from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import apology, login_required, lookup
-from os.path import exists 
+from helpers import apology, login_required
 
 # Configure application
 app = Flask(__name__)
@@ -20,113 +20,160 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-DATABASE = '/code/database.db'
-
-def get_db():
-    return sqlite3.connect(DATABASE)
+DB_FILE_PATH = '/code/database.db'
 
 print(calendar.month(2020, 12, 4)) 
 print('TODAY:', datetime.date.today())
 print('TODAY:', datetime.datetime.day)
-cal= calendar.Calendar()
-#print('YEARDATES:', cal.yeardatescalendar(2022))
+_cal= calendar.Calendar()
 
 timeslots = ["10:30 - 13:30", "14:00 - 17:30", "18:30 - 23:00"]
 
+def get_db():
+    """ Returns a sqlite3 db session"""
+    return sqlite3.connect(DB_FILE_PATH)
 
-def __init_db(DATABASE):                                      
+
+def __init_db(database_path):                                      
     """Create database schema if application is started for the first time""" 
-    if exists(DATABASE):                                      
+    if exists(database_path):                                      
         return   
 
-    db = get_db()
-    cursor = db.cursor()
-    create_users_table = "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\
+    db_connection = get_db()
+    cursor = db_connection.cursor()
+    users_table = "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\
             email TEXT NOT NULL,\
             hash TEXT NOT NULL,\
             first_name TEXT NOT NULL,\
             last_name TEXT NOT NULL, \
             apartment INT NOT NULL)"
 
-    cursor.execute(create_users_table)
-
-    cursor.execute("CREATE UNIQUE INDEX email ON users(email)")
-
-    create_bookings_table = "CREATE TABLE user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\
+    bookings_table = "CREATE TABLE user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\
             email TEXT NOT NULL, \
             booking_time TEXT NOT NULL, \
             booking_date TEXT NOT NULL)"
-    cursor.execute(create_bookings_table)
 
-    db.commit()
-    db.close()
+    cursor.execute(users_table)
+    cursor.execute("CREATE UNIQUE INDEX email ON users(email)")
+    cursor.execute(bookings_table)
+
+    db_connection.commit()
+    db_connection.close()
 
 
 @app.route('/dates')
 def dates():
+    """ Shows calendar"""
+    args = request.args
+    page = args.get('page')
+
     currently = datetime.date.today()
+    current_year = currently.year
     today = currently.day
-    month = currently.strftime("%B")
-    year = currently.year
-    dates = calendar.monthcalendar(year, currently.month)
-    return render_template("calendar.html", today=today, month=month, year=year, dates=dates)
+    monthName = currently.strftime("%B")
+    current_month_number = currently.month
+    next_month_number = 0
+    third_month_number = 0
+    year = current_year
+
+    if current_month_number == 1:
+        year = year + 1
+    if current_month_number < 11:
+        next_month_number = current_month_number + 1
+        third_month_number = current_month_number + 2
+    elif current_month_number == 11:
+        next_month_number = current_month_number + 1
+        third_month_number = 1
+    elif current_month_number == 12:
+        next_month_number = 1
+        third_month_number =  next_month_number + 1
+    
+    month1 = calendar.monthcalendar(year, current_month_number)
+    month2 = calendar.monthcalendar(year, next_month_number)
+    month3 = calendar.monthcalendar(year, third_month_number)
+    month = month1
+ 
+    if page is not None:
+        if page == "2":
+            month=month2
+        elif page == "3":
+            month=month3
+
+    return render_template("calendar.html",
+                           today=today,
+                           monthName=monthName,
+                           year=year,
+                           month=month)
+
 
 @app.route('/dayview')
 def dayview():
+    """Presents available timeslots for a particular day"""
     return render_template("dayview.html", timeslots=timeslots)
+
 
 @app.route('/confirm', methods=["GET", "POST"])
 def confirm():
+    """Confirm booking"""
     if request.method == "GET":
-      return render_template("confirm.html")
-    
+        return render_template("confirm.html")
+
     booking_time = request.form.get("confirmTime")
     booking_date = request.form.get("confirmDay")
     current_user = session["user_id"]
 
     # Insert booking into users booking table:
 
-    db = get_db()
+    db_connection = get_db()
 
     query1 = f'SELECT email FROM users WHERE id="{session["user_id"]}"'
-    result = db.execute(query1)
+    result = db_connection.execute(query1)
     email = result.fetchone()
 
     # Insert the new booking into the bookings table
-    cursor_obj3 = db.cursor()
-    query3 = f'INSERT INTO user_bookings (email, booking_time, booking_date) VALUES ("{email}", "{booking_time}", "{booking_date}")'
+    cursor_obj3 = db_connection.cursor()
+    query3 = f'INSERT INTO user_bookings (email, \
+            booking_time, booking_date) VALUES ("{email}", "{booking_time}", "{booking_date}")'
     cursor_obj3.execute(query3)
-    
+
     # Commit the command
-    db.commit()
+    db_connection.commit()
 
     # Close the connection
-    db.close()
+    db_connection.close()
 
-    return render_template("confirmed.html", booking_time=booking_time, booking_date=booking_date, current_user=current_user, email=email)    
+    return render_template("confirmed.html",
+            booking_time=booking_time,
+            booking_date=booking_date,
+            current_user=current_user,
+            email=email)
+
 
 @app.route("/")
 # @login_required
 def index():
+    """Renders landing page of the booking system"""
     return render_template("index.html")
+
 
 @app.route("/welcome")
 @login_required
 def welcome():
+    """ Once logged in greet user with this page"""
     # Query database for user's name
-    db = get_db()
+    db_connection = get_db()
     query = f'SELECT first_name FROM users WHERE id="{session["user_id"]}"'
-    result = db.execute(query)
+    result = db_connection.execute(query)
     user = result.fetchone()
-    
-    # Close the connection
-    db.close()
+
+    db_connection.close()
     return render_template("welcome.html", user=user)
+
 
 # LOGIN ROUTE
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    """Log user in"""
+    """Login user"""
 
     #Forget any user-id
     session.clear()
@@ -139,32 +186,31 @@ def login():
             return apology("must provide email", 403)
 
         # Ensure password was submitted
-        elif not request.form.get("password"):
+        if not request.form.get("password"):
             return apology("must provide password", 403)
 
         # Query database for email
-        db = get_db()
+        db_connection = get_db()
         query = f'SELECT * FROM users WHERE email="{request.form.get("email")}"'
-        result = db.execute(query)
+        result = db_connection.execute(query)
         rows = result.fetchall()
-        
+
         # Close the connection
-        db.close()
+        db_connection.close()
 
         # Ensure email exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0][2], request.form.get("password")):
             return apology("invalid email and/or password", 403)
-       
+
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
 
-        #   flash('You are now logged in')
-
           # Redirect user to home pgae
         return redirect("/welcome")
-    
+
     # User reached route via GET (as by clicking a link or via redirect)
     return render_template("login.html")
+
 
 # LOGOUT ROUTE
 @app.route("/logout")
@@ -177,6 +223,7 @@ def logout():
     # Redirect user to login form
     return redirect("/login")
 
+
 # REGISTER ROUTE
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -187,66 +234,66 @@ def register():
         return render_template("register.html")
 
     # Check for possible errors
-    else:
-        email = request.form.get("email")
-        password = request.form.get("password")
-        verify_password = request.form.get("confirmation")
-        first_name = request.form.get("first_name")
-        last_name = request.form.get("last_name")
-        apartment = request.form.get("apartment")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    verify_password = request.form.get("confirmation")
+    first_name = request.form.get("first_name")
+    last_name = request.form.get("last_name")
+    apartment = request.form.get("apartment")
 
-        # Ensure email was submitted
-        if not email:
-            return apology("must provide email")
+    # Ensure email was submitted
+    if not email:
+        return apology("must provide email")
 
-        # # Ensure password was submitted
-        if not password:
-            return apology("must provide password")
+    # # Ensure password was submitted
+    if not password:
+        return apology("must provide password")
 
-        # Ensure password matches verification
-        if not verify_password or password != verify_password:
-            return apology("password must match verification")
+    # Ensure password matches verification
+    if not verify_password or password != verify_password:
+        return apology("password must match verification")
 
-        # # Ensure first name was submitted
-        if not first_name:
-            return apology("must provide first name")
+    # # Ensure first name was submitted
+    if not first_name:
+        return apology("must provide first name")
 
-        # # Ensure last name was submitted
-        if not last_name:
-            return apology("must provide last name")
+    # # Ensure last name was submitted
+    if not last_name:
+        return apology("must provide last name")
 
-        # # Ensure apartment number was submitted
-        if not apartment:
-            return apology("must provide apartment number")
+    # # Ensure apartment number was submitted
+    if not apartment:
+        return apology("must provide apartment number")
 
     hash_password = generate_password_hash(password)
 
     # Insert new user into USERS table
     try:
         # Ensure email not already registered
-        db = get_db()
+        db_connection = get_db()
 
         # Create cursor object
-        cursor_obj = db.cursor()
+        cursor_obj = db_connection.cursor()
 
-        query = f'INSERT INTO users (hash, email, first_name, last_name, apartment) VALUES ("{hash_password}", "{email}", "{first_name}", "{last_name}", "{apartment}")'
+        query = f'INSERT INTO users (hash, email, first_name, last_name, apartment) \
+                VALUES ("{hash_password}", "{email}", "{first_name}", "{last_name}", "{apartment}")'
 
         cursor_obj.execute(query)
 
         # Commit the command
-        db.commit()
+        db_connection.commit()
 
         # Close the connection
-        db.close()
+        db_connection.close()
     except ValueError:
-        db.close()
+        db_connection.close()
         return apology("email is already registered")
     else:
-        db = get_db()
+        db_connection = get_db()
         query = f'SELECT id FROM users WHERE email="{email}"'
-        result = db.execute(query)
-        session["user_id"] = result.fetchall()
-        db.close()
+        result = db_connection.execute(query)
+        session["user_id"] = result.fetchone()
+        db_connection.close()
 
         # Redirect user to home page
         return redirect("/welcome")
@@ -255,28 +302,30 @@ def register():
 @app.route('/confirmed')
 @login_required
 def confirmed():
+    """ Show confirmation page for booking details """
     return render_template("confirmed.html")
+
 
 @app.route('/userpage')
 def userpage():
-    # Get all of users bookings
+    """ Show a users bookings """
 
-    db = get_db()
+    db_connection = get_db()
     # Get users email
     query1 = f'SELECT email FROM users WHERE id="{session["user_id"]}"'
-    result1 = db.execute(query1)
+    result1 = db_connection.execute(query1)
     email = result1.fetchone()
 
     # Get users bookings
     query2 = f'SELECT * FROM user_bookings WHERE email="{email}"'
-    result2 = db.execute(query2)
+    result2 = db_connection.execute(query2)
     bookings = result2.fetchall()
 
     # Commit the command
-    db.commit()
+    db_connection.commit()
 
     # Close the connection
-    db.close()
+    db_connection.close()
 
     currently = datetime.date.today()
     today = str(currently.day)
@@ -286,9 +335,15 @@ def userpage():
 
     # current_time = datetime.datetime.now().strftime("%H:%M:%S")
 
-    return render_template("bookings.html", current_date=current_date, bookings=bookings, today=today, month=month, year=year)
+    return render_template("bookings.html",
+                           current_date=current_date,
+                           bookings=bookings,
+                           today=today,
+                           month=month,
+                           year=year)
 
-__init_db(DATABASE)
+                           
+__init_db(DB_FILE_PATH)
 app.run(host='0.0.0.0')
 
 
