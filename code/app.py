@@ -60,12 +60,11 @@ def __init_db(database_path):
     db_connection.commit()
     db_connection.close()
 
-
-@app.route('/dates')
-def dates():
+@app.route('/dates/page/', defaults={'page': 1})
+@app.route('/dates/page/<int:page>')
+def dates(page):
     """ Shows calendar"""
-    args = request.args
-    page = args.get('page')
+    #page = request.args.get('page', default = 1, type = str)
 
     currently = datetime.date.today()
     current_year = currently.year
@@ -76,8 +75,6 @@ def dates():
     third_month_number = 0
     year = current_year
 
-    if current_month_number == 1:
-        year = year + 1
     if current_month_number < 11:
         next_month_number = current_month_number + 1
         third_month_number = current_month_number + 2
@@ -93,13 +90,16 @@ def dates():
     month3 = calendar.monthcalendar(year, third_month_number)
     month = month1
  
-    if page is not None:
-        if page == "2":
-            month=month2
-        elif page == "3":
-            month=month3
+    #if page is not None:
+    if page == 2:
+      month=month2
+      monthName = calendar.month_name[next_month_number]
+    elif page == 3:
+      month=month3
+      monthName = calendar.month_name[third_month_number]
 
     return render_template("calendar.html",
+                           page=page,
                            today=today,
                            monthName=monthName,
                            year=year,

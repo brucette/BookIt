@@ -1,5 +1,4 @@
 
-
 let month = document.querySelector(".month")
 if (month) {
   localStorage.setItem("month", month.innerHTML);

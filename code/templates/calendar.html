@@ -11,16 +11,20 @@
 <h2 class="year">{{ year }}</h2>
 
 <div class="back-or-forward">
-  <a class="back"><<<<</a>
-  <a class="forward">>>>></a>
+  <div class="back">
+  {% if page > 1 %}
+    <a class="move" href=/dates/page/{{ page - 1 }}><<<</a>
+  {% endif %}
+  </div> 
+  <div class="forward">
+  {% if page < 3 %}
+    <a class="move" href=/dates/page/{{ page + 1 }}>>>></a>
+  {% endif %}
+  </div>
 </div>
   
   <table>
     <thead>
-      <!-- <tr>
-          <th class="month-header"><h2 class="month">{{ monthName }}</h2></th>
-          <th class="year-header"><h2 class="year">{{ year }}</h2></th>
-      </tr> -->
       <tr class="week-header">
         <th>Mon</th>
         <th>Tue</th>

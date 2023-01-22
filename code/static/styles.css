@@ -10,11 +10,48 @@ Grey: #DAE1E7 */
   position: fixed;
   top: 0;
   left: 0;
-  width: 15vw;
+  width: 100vw;
   height: 100%;
   padding: 1rem 1rem;
   transition: all 0.5s ease;
 }
+
+/* TABLET */
+@media (min-width: 668px) {
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    background-color: #1D4C82;
+    color: #DAE1E7;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 15vw;
+    height: 100%;
+    padding: 1rem 1rem;
+    transition: all 0.5s ease;
+  }
+}
+/* LAPTOP */
+@media (min-width: 1024px) {
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    background-color: #1D4C82;
+    color: #DAE1E7;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 15vw;
+    height: 100%;
+    padding: 1rem 1rem;
+    transition: all 0.5s ease;
+  }
+}
+/* DESKTOP */
+@media (min-width: 2560px) {
+}
+
 
 .container {
   /* border: 2px solid green; */
@@ -76,24 +113,28 @@ a {
 
 .back-or-forward {
   display: flex;
-  /* border: 2px red solid; */
   width: 70%;
-  justify-content: space-between;
   margin-bottom: 1rem;
 }
 
-.forward {
-  color: #DD6D4F;
+.forward, .back {
+  display: flex;
   cursor: pointer;
   letter-spacing:5px;
   font-weight: bold;
+  width: 50%;
+}
+
+.forward {
+  justify-content: flex-end;
 }
 
 .back {
+  justify-content: flex-start;
+}
+
+.move {
   color: #DD6D4F;
-  cursor: pointer;
-  letter-spacing:5px;
-  font-weight: bold;
 }
 
 .navLink {
