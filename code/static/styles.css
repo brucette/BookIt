@@ -2,27 +2,132 @@
 orange: DD6D4F
 Grey: #DAE1E7 */
 
+body {
+  font-family: Montserrat;
+  margin: 0;
+  padding: 0;
+}
+
 .sidebar {
+  display: none;
+}
+
+.nav-toggle {
+  /* border: 2px solid green; */
+  margin: 0;
+  padding: 0;
+
+}
+
+.navigate {
+  border: 2px solid green;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  width: 80%;
+}
+
+ul {
+  list-style-type: none;
+  width: 100%;
+  
+}
+
+li {
+  margin: 2rem;
+  width: 100%;
+ 
+}
+
+.hamburger {
+  display: block;
+  width: 28px;
+  height: 3px;
+  margin: 8px 16px;
+  background: #DD6D4F;
+  border-radius: 3px;
+}
+
+.close {
+  font-weight: bold;
+  font-size: x-large;
+  color: #DD6D4F;
+}
+
+.open {
+  margin: 0;
+  padding: 0.5rem 1rem; 
+  min-height: 100vh;
+  min-width: 100vw;
+  max-width: 100vw;
   display: flex;
   flex-direction: column;
   background-color: #1D4C82;
   color: #DAE1E7;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100%;
-  padding: 1rem 1rem;
-  transition: all 0.5s ease;
+  transition: all 0.25s ease-in-out 0s;
+}
+
+.hidden {
+  display: none;
+  margin: 0;
+  padding: 0;
+  height: 0;
+  width: 0;
+}
+
+.navLink {
+  text-decoration: none;
+  text-align: center;
+  padding: 0.5rem;
+  border: 1px solid #DD6D4F;
+  border-radius: 20px;
+  color: #DD6D4F;
+  cursor: pointer;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.container {
+  /* border: 2px solid green; */
+  /* margin-left: 17vw; */
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+form {
+  width: 90%;
+  border: 2px solid blue;
+  text-align: center;
+}
+
+.inputWrap {
+  margin: 1rem 0;
+}
+
+.formInput {
+  height: 1.5rem;
+  border-radius: 5px;
+  border: 1px solid #333;
+  padding: 0.7rem;
+  width: 90%;
+  font-family: Montserrat;
+}
+
+.bookings {
+  border: 2px solid blue;
+  width: 100%;
+  font-size: smaller;
 }
 
 /* TABLET */
 @media (min-width: 668px) {
   .sidebar {
-    display: flex;
-    flex-direction: column;
-    background-color: #1D4C82;
-    color: #DAE1E7;
     position: fixed;
     top: 0;
     left: 0;
@@ -32,6 +137,7 @@ Grey: #DAE1E7 */
     transition: all 0.5s ease;
   }
 }
+
 /* LAPTOP */
 @media (min-width: 1024px) {
   .sidebar {
@@ -45,22 +151,36 @@ Grey: #DAE1E7 */
     width: 15vw;
     height: 100%;
     padding: 1rem 1rem;
+    margin-right: 17vw;
     transition: all 0.5s ease;
   }
+
+  .navIcon {
+    display: none;
+  }
+  
+  .container {
+    width: 60%;
+    justify-content: start;
+  }
+
+  form {
+    width: 20%;
+    text-align: center;
+  }
+
+  .bookit {
+    font-size: 5rem;
+    font-family: Monoton, cursive;
+    color: #DD6D4F;
+  }
+  
 }
+
 /* DESKTOP */
 @media (min-width: 2560px) {
 }
 
-
-.container {
-  /* border: 2px solid green; */
-  margin-left: 17vw;
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
 .checkbox {
   width: 10rem;
@@ -75,18 +195,8 @@ Grey: #DAE1E7 */
   margin: 2rem;
 }
 
-.inputWrap {
-  margin: 0.5rem 0;
-}
-
-.formInput {
-  height: 1rem;
-}
-
 button {
-  /* background-color: #DD6D4F; */
   background-color: #1D4C82;
-  /* color: #1D4C82; */
   color: white;
   cursor: pointer;
   padding: 0.5rem;
@@ -94,6 +204,7 @@ button {
   width: 5rem;
   border: 1px solid #1D4C82;
   width: 6rem;
+  font-family: Montserrat;
 }
 
 button:hover {
@@ -143,16 +254,16 @@ a {
   padding: 0.5rem;
   border: 1px solid #DD6D4F;
   border-radius: 20px;
-  width: 5rem;
   color: #DD6D4F;
   cursor: pointer;
-  width: 6rem;
+  width: 7rem;
+  margin: 1rem 0;
 }
 
 .filled {
   background-color: #DD6D4F;
   color: white;
-  width: 12rem;
+  width: 13rem;
   margin: 1rem;
   padding: 1rem;
   font-size: larger;
@@ -228,11 +339,9 @@ a {
   background-color: #1D4C82;
   color: aliceblue;
   box-shadow: 0 0 11px rgba(33,33,33,.2);
-  /* transition: box-shadow .3s; */
   -webkit-transform: translateY(-4px);
-	transform: translateY(-4px);
-  /* transition: 0.5s background-color ease-in-out; */
 }
+
 .inputwrap{
   border: 1px solid grey;
   border-radius: 5px;

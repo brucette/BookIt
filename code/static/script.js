@@ -1,3 +1,18 @@
+const navToggle = document.querySelectorAll(".nav-toggle");
+const sidebar = document.querySelector(".sidebar");
+const navIcon = document.querySelectorAll(".navIcon");
+console.log('navIcons are:', navIcon)
+const hamburger = document.querySelector("#hamburger");
+
+
+navToggle.forEach(item => {
+  item.addEventListener("click", () => {
+    // item.classList.toggle("hidden");
+    sidebar.classList.toggle("open");
+    navIcon.forEach(icon => {
+        icon.classList.toggle("hidden");
+    })
+})})
 
 let month = document.querySelector(".month")
 if (month) {

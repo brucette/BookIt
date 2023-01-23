@@ -4,22 +4,52 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;family=Monoton&amp;display=swap" rel="stylesheet">
     <link href="/static/styles.css" rel="stylesheet">
     <link type="image/png" sizes="16x16" rel="icon" href="/static/icons8-calendar-16.png">
     <title>BookIt</title>
 </head>
 <body>
-    <nav class="sidebar">
-        <h3>Welcome</h3>
-        <p>Here you can..</p>
-        <!-- <a class="navLink" href="/register">Register</a> -->
-        {% if session["user_id"] %}
-         <a class="navLink" href="/logout">Log Out</a>
-        {% else %}
-          <a class="navLink" href="/register">Register</a>
-        {% endif %}
-    </nav>
+  <div class="nav-toggle">
+    <span class="navIcon hamburger"></span>
+    <span class="navIcon hamburger"></span>
+    <span class="navIcon hamburger"></span>
+  </div>
+  <nav class="sidebar">
+    <div class="nav-toggle">
+      <span class="navIcon close hidden">X</span>
+    </div>
 
+    <p>
+      Bookit is a booking system for the use of our communal area for any festive occasions. 
+      Here you can..
+    </p>
+
+    <section class="navigate">
+      
+        <ul>
+          {% if session["user_id"] %}
+          <li>
+            <a class="navLink" href="/logout">Log Out</a>
+          </li> 
+          <li>
+            <a class="navLink" href="/userpage">My bookings</a>
+          </li>
+          {% else %}
+          <li>
+            <a class="navLink" href="/login">Login</a>
+          </li>
+          <li>
+            <a class="navLink" href="/register">Register</a>
+          </li>
+          {% endif %}
+        </ul>
+    </section>
+  </nav>
+    
     <main class="container">
       <h2>
         {% block title %}{% endblock %}

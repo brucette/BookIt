@@ -103,7 +103,8 @@ def dates(page):
                            today=today,
                            monthName=monthName,
                            year=year,
-                           month=month)
+                           month=month,
+                           current_month_number=current_month_number)
 
 
 @app.route('/dayview')

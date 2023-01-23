@@ -5,8 +5,6 @@
 {% endblock %}
 
 {% block main %}
-<!-- <h1>{{ today, monthName, year }}</h1> -->
-
 <h2 class="month">{{ monthName }}</h2>
 <h2 class="year">{{ year }}</h2>
 
@@ -49,7 +47,7 @@
               <td class="cal-btn">
                 <a class="deactiveLink" href="#">{{ element }}</a>
               </td>
-            {% elif element == today %}
+            {% elif page == 1 and element == today %}
               <td class="cal-btn">
                 <a class="bookingLink today" href="/dayview">{{ element }}</a>
               </td>  
