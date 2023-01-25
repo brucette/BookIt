@@ -8,6 +8,35 @@ body {
   padding: 0;
 }
 
+.actionBtn {
+  background-color: #1D4C82;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 40px;
+  border: 1px solid #1D4C82;
+  width: 8rem;
+  font-family: Montserrat;
+  margin: 1rem 0;
+}
+
+.actionBtn:hover {
+  background-color: #DAE1E7;
+  color: #1D4C82;
+  transition: 0.5s background-color ease-in-out;
+  cursor: pointer;
+}
+
+.actionBtn:active {
+  transform: translateY(3px);
+}
+
+.rooftop {
+  height: 55vh;
+  border-radius: 10px;
+  margin: 2rem;
+}
+
 .sidebar {
   display: none;
 }
@@ -16,7 +45,6 @@ body {
   /* border: 2px solid green; */
   margin: 0;
   padding: 0;
-
 }
 
 .navigate {
@@ -25,20 +53,21 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
-  width: 80%;
+  margin: 2rem auto;
+  width: 90%;
 }
 
 ul {
+  border: 2px solid red;
+  display: flex;
+  flex-direction: column;
   list-style-type: none;
-  width: 100%;
-  
+  width: 90%;
 }
 
 li {
-  margin: 2rem;
+  margin: 1.5rem;
   width: 100%;
- 
 }
 
 .hamburger {
@@ -86,13 +115,49 @@ li {
   color: #DD6D4F;
   cursor: pointer;
   margin: 1rem 0;
-  width: 100%;
+  width: 9rem;
+}
+
+.filled {
+  background-color: #DD6D4F;
+  color: white;
+  width: 13rem;
+  margin: 1rem;
+  padding: 1rem;
+  font-size: larger;
+}
+
+.navLink:hover {
+  background-color: #DD6D4F;
+  color: white;
+  transition: 0.5s background-color ease-in-out;
+  cursor: pointer;
+}
+
+.filled:hover {
+  size: 1.5;
+}
+
+a {
+  text-decoration: none;
+}
+
+.forward {
+  justify-content: flex-end;
+}
+
+.back {
+  justify-content: flex-start;
+}
+
+.move {
+  color: #DD6D4F;
 }
 
 .container {
   /* border: 2px solid green; */
   /* margin-left: 17vw; */
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -100,11 +165,54 @@ li {
   margin: 0 auto;
 }
 
-form {
-  width: 90%;
-  border: 2px solid blue;
+.cal-btn {
+  /* border: 1px solid #666; */
+  /* padding: 1.5rem 0; */
+  width: 14%;
+  height: 2.5rem;
   text-align: center;
+  font-weight: bold;
+  border: 1px solid #DD6D4F;
+  border-radius: 3px;
+} 
+
+.bookingLink:hover {
+  background-color: #DAE1E7;
+  border-radius: 3px;
+  cursor: pointer;
 }
+
+.deactiveLink {
+  text-decoration: line-through;
+}
+
+.bookingLink, .deactiveLink {
+  /* padding: 3rem 3.9rem; */
+  width: 14%;
+  height: 2rem;
+  background-color: white;
+  color: #1D4C82;
+  border: none;
+  margin: 2px;
+  font-weight: bold;
+}
+
+.today {
+  color: #DD6D4F;
+}
+
+.confirmation-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+}
+
+/* form {
+  width: 90%;
+  text-align: center;
+  border: 2px solid blue;
+} */
 
 .inputWrap {
   margin: 1rem 0;
@@ -125,7 +233,196 @@ form {
   font-size: smaller;
 }
 
-/* TABLET */
+.back-or-forward {
+  display: flex;
+  width: 95%;
+  margin-bottom: 1rem;
+}
+
+.forward, .back {
+  display: flex;
+  letter-spacing:5px;
+  width: 50%;
+}
+
+.calendar {
+  border: 2px solid purple;
+  width: 100%;
+}
+
+.week-header {
+  height: 4rem;
+}
+
+.cal-btn {
+  /* border: 1px solid #666; */
+  /* font-weight: bold; */
+  padding: 0.7rem 0;
+  width: 14%;
+  height: 2.5rem;
+  text-align: center;
+  border: 1px solid #DD6D4F;
+  border-radius: 3px;
+} 
+
+h2, h3 {
+  color: #555;
+}
+
+.timeslotsWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+
+.timeslot {
+  width: 10rem;
+  padding: 0.7rem 1rem;
+  border-radius: 2.5rem;
+  border: 1px solid #1D4C82;
+  /* background-color: bisque; */
+  /* color: #666; */
+  /* color: black; */
+  /* font-weight: bold; */
+  font-size: 1rem;
+  margin: 1rem 0;
+  cursor: pointer;
+  letter-spacing: 2px;
+}
+
+.timeslot:hover {
+  background-color: #1D4C82;
+  color: aliceblue;
+  box-shadow: 0 0 11px rgba(33,33,33,.2);
+  -webkit-transform: translateY(-4px);
+}
+
+.active {
+  background-color: green;
+  opacity: 0.8;
+  color: white;
+}
+
+.inactive {
+  background-color: red;
+  opacity: 0.7;
+  text-decoration:line-through;
+  color: black;
+}
+
+.inputwrap{
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 1rem;
+  box-shadow:  10px 5px 5px #666;
+  width: 80%;
+}
+
+.disabledInput {
+  border: none;
+  background-color: white;
+  color: black;
+  display: block;
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+.selected {
+  display: none;
+}
+
+.row {
+  padding: 0.8rem 0;
+  height: 2.5rem;
+  text-align: center;
+}
+
+.month, .year {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+
+table {
+  /* border: 2px solid blue; */
+  width: 70%;
+}
+
+th {
+  border: 1px solid #DAE1E7;
+  border-radius: 3px;
+  background-color: #eee;
+}
+
+/* code for circle and checkmark upon confirmation copied from: https://bbbootstrap.com/snippets/animated-checkmark-50934051 */
+.wrapper {
+  height: 25vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eee;
+  border-radius: 5px;
+  box-shadow:  10px 5px 5px #777;
+  width: 80%;
+}
+
+.checkmark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke: #7ac142;
+  fill: none;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards
+}
+
+.checkmark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 2;
+  stroke: #fff;
+  stroke-miterlimit: 10;
+  margin: 10% auto;
+  box-shadow: inset 0px 0px 0px #7ac142;
+  animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both
+}
+
+.checkmark__check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0
+  }
+}
+@keyframes scale {
+  0%, 100% {
+    transform: none
+  }
+  50% {
+    transform: scale3d(1.1, 1.1, 1)
+  }
+}
+@keyframes fill {
+  100% {
+    box-shadow: inset 0px 0px 0px 30px #7ac142
+  }
+}
+
+.cancel {
+  width: fit-content;
+}
+
+
+/* ********* TABLET ************** */
 @media (min-width: 668px) {
   .sidebar {
     position: fixed;
@@ -138,7 +435,8 @@ form {
   }
 }
 
-/* LAPTOP */
+
+/* ********* LAPTOP ************** */
 @media (min-width: 1024px) {
   .sidebar {
     display: flex;
@@ -174,209 +472,46 @@ form {
     font-family: Monoton, cursive;
     color: #DD6D4F;
   }
+
+  .back-or-forward {
+    display: flex;
+    width: 70%;
+    margin-bottom: 1rem;
+  }
+
+  .forward, .back {
+    display: flex;
+    cursor: pointer;
+    letter-spacing:5px;
+    /* font-weight: bold; */
+    width: 50%;
+  }
   
+  .calendar {
+    border: 2px solid purple;
+    width: 70%;
+  }
 }
 
-/* DESKTOP */
+
+/* ********* DESKTOP ************* */
 @media (min-width: 2560px) {
 }
 
-
-.checkbox {
-  width: 10rem;
-  height: 10rem;
-  border-radius: 50%;
-  /* border: 2px green solid; */
-}
-
-.rooftop {
-  height: 55vh;
-  border-radius: 10px;
-  margin: 2rem;
-}
-
-button {
-  background-color: #1D4C82;
-  color: white;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 40px;
-  width: 5rem;
-  border: 1px solid #1D4C82;
-  width: 6rem;
-  font-family: Montserrat;
-}
-
-button:hover {
-  background-color: #DAE1E7;
-  color: #1D4C82;
-  transition: 0.5s background-color ease-in-out;
-  cursor: pointer;
-}
-
-button:active {
-  transform: translateY(3px);
-}
-
-a {
-  text-decoration: none;
-}
-
-.back-or-forward {
-  display: flex;
-  width: 70%;
-  margin-bottom: 1rem;
-}
-
-.forward, .back {
-  display: flex;
-  cursor: pointer;
-  letter-spacing:5px;
-  font-weight: bold;
-  width: 50%;
-}
-
-.forward {
-  justify-content: flex-end;
-}
-
-.back {
-  justify-content: flex-start;
-}
-
-.move {
-  color: #DD6D4F;
-}
-
-.navLink {
+/* .navLink {
   text-decoration: none;
   text-align: center;
-  padding: 0.5rem;
+  padding: 0.7rem;
   border: 1px solid #DD6D4F;
   border-radius: 20px;
   color: #DD6D4F;
   cursor: pointer;
-  width: 7rem;
-  margin: 1rem 0;
-}
-
-.filled {
-  background-color: #DD6D4F;
-  color: white;
-  width: 13rem;
-  margin: 1rem;
-  padding: 1rem;
-  font-size: larger;
-}
-
-.navLink:hover {
-  background-color: #DD6D4F;
-  color: white;
-  transition: 0.5s background-color ease-in-out;
-  cursor: pointer;
-}
-
-.filled:hover {
-  size: 1.5;
-}
-
- .cal-btn {
-  /* border: 1px solid #666; */
-  padding: 1.5rem 0;
-  width: 6rem;
-  height: 5rem;
-  text-align: center;
-  font-weight: bold;
-  border: 1px solid #DD6D4F;
-  border-radius: 3px;
-} 
-
-.bookingLink:hover {
-  background-color: #DAE1E7;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.bookingLink, .deactiveLink {
-  padding: 3rem 3.9rem;
-  width: 5rem;
-  height: 4rem;
-  background-color: white;
-  color: #1D4C82;
-  margin: 2px;
-}
-
-.today {
-  color: #DD6D4F;
-  font-size: larger;
-}
-
-.confirmation-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.confirm {
- margin: 1rem 0;
-}
-
-.timeslotsWrapper {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 2rem;
-}
-
-.timeslot {
-  width: 8rem;
-  padding: 0.5rem;
-  background-color: bisque;
-  color: #666;
-  margin: 1rem 0;
-  cursor: pointer;
-}
-
-.timeslot:hover {
-  background-color: #1D4C82;
-  color: aliceblue;
-  box-shadow: 0 0 11px rgba(33,33,33,.2);
-  -webkit-transform: translateY(-4px);
-}
-
-.inputwrap{
-  border: 1px solid grey;
-  border-radius: 5px;
-  padding: 1rem;
-  box-shadow:  10px 5px 5px #666;
-}
-
-.disabledInput {
-  border: none;
-  background-color: white;
-  color: black;
-  display: block;
-  margin: 1rem 0;
-}
-
-.row {
-  padding: 0.8rem 0;
-  height: 2.5rem;
-  text-align: center;
-}
-
-.month, .year {
-  display: inline;
-  margin: 0;
-  padding: 0;
-  float: left;
-}
+  min-width: 7rem;
+  max-width: fit-content;
+  margin: 2rem 0;
+} */
 
 
-table {
-  /* border: 2px solid blue; */
-  width: 70%;
-}
 
-th {
-  border: 1px solid gray;
-  border-radius: 3px;
-}
+
+

@@ -2,6 +2,7 @@
 import sqlite3
 import calendar
 import datetime
+import time
 from os.path import exists
 from flask import Flask, redirect, render_template, session, request
 from flask_session import Session
@@ -22,12 +23,12 @@ Session(app)
 
 DB_FILE_PATH = '/code/database.db'
 
-print(calendar.month(2020, 12, 4)) 
-print('TODAY:', datetime.date.today())
-print('TODAY:', datetime.datetime.day)
-_cal= calendar.Calendar()
-
+# Global variables
 timeslots = ["10:30 - 13:30", "14:00 - 17:30", "18:30 - 23:00"]
+currently = datetime.date.today()
+current_year = currently.year
+today = currently.day
+current_month_number = currently.month
 
 def get_db():
     """ Returns a sqlite3 db session"""
@@ -60,17 +61,13 @@ def __init_db(database_path):
     db_connection.commit()
     db_connection.close()
 
+
 @app.route('/dates/page/', defaults={'page': 1})
 @app.route('/dates/page/<int:page>')
 def dates(page):
     """ Shows calendar"""
-    #page = request.args.get('page', default = 1, type = str)
 
-    currently = datetime.date.today()
-    current_year = currently.year
-    today = currently.day
     monthName = currently.strftime("%B")
-    current_month_number = currently.month
     next_month_number = 0
     third_month_number = 0
     year = current_year
@@ -90,7 +87,6 @@ def dates(page):
     month3 = calendar.monthcalendar(year, third_month_number)
     month = month1
  
-    #if page is not None:
     if page == 2:
       month=month2
       monthName = calendar.month_name[next_month_number]
@@ -107,10 +103,49 @@ def dates(page):
                            current_month_number=current_month_number)
 
 
-@app.route('/dayview')
+@app.route('/middle', methods=["GET", "POST"])
+def middle():
+    """Page to allow time for storage of selected day"""
+    return render_template("middle.html")
+
+
+@app.route('/dayview', methods=["GET", "POST"])
 def dayview():
     """Presents available timeslots for a particular day"""
-    return render_template("dayview.html", timeslots=timeslots)
+
+    selected_date = request.form.get("selectedDay")
+
+    # Get today's date
+    todays_date = str(today) + '/' + str(current_month_number) + '/' + str(current_year)
+
+    # Get current time
+    t = time.localtime()
+    current_time = time.strftime("%H:%M", t)
+
+    # Get all made bookings from this point onwards
+    db_connection = get_db()
+    query = f'SELECT * FROM user_bookings WHERE booking_date>="{todays_date}"'
+    result = db_connection.execute(query)
+    bookings = result.fetchall()
+
+    # Commit the command
+    db_connection.commit()
+
+    # Close the connection
+    db_connection.close()
+
+    # if request.method == "GET":
+    #     return render_template("dayview.html", 
+    #                             selected_date=selected_date,
+    #                             timeslots=timeslots,
+    #                             bookings=bookings, 
+    #                             todays_date=todays_date)
+
+    return render_template("dayview.html", 
+                            selected_date=selected_date,
+                            timeslots=timeslots,
+                            bookings=bookings, 
+                            todays_date=todays_date)
 
 
 @app.route('/confirm', methods=["GET", "POST"])
@@ -307,9 +342,23 @@ def confirmed():
     return render_template("confirmed.html")
 
 
-@app.route('/userpage')
+@app.route('/userpage', methods=["GET", "POST"])
 def userpage():
     """ Show a users bookings """
+
+    if request.method == "POST":
+        selected_row = request.form.get("selectedRow")
+
+        db_connection = get_db()
+        query = f'DELETE FROM user_bookings WHERE id="{selected_row}"'
+        result = db_connection.execute(query)
+        #email = result.fetchone()
+
+        # Commit the command
+        db_connection.commit()
+
+        # Close the connection
+        db_connection.close()
 
     db_connection = get_db()
     # Get users email
@@ -334,8 +383,6 @@ def userpage():
     year = str(currently.year)
     current_date = today + "/" + month + "/" + year
 
-    # current_time = datetime.datetime.now().strftime("%H:%M:%S")
-
     return render_template("bookings.html",
                            current_date=current_date,
                            bookings=bookings,
@@ -347,8 +394,4 @@ def userpage():
 __init_db(DB_FILE_PATH)
 app.run(host='0.0.0.0')
 
-
-
-# CREATE UNIQUE INDEX email ON users(email);
-# CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, hash TEXT NOT NULL, first_name TEXT NOT NULL, last_name TEXT NOT NULL, apartment INT NOT NULL);
-# 
+# CREATE TABLE user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, booking_time TEXT NOT NULL, booking_date TEXT NOT NULL)

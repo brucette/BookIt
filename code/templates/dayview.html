@@ -1,22 +1,44 @@
 {% extends "layout.html" %}
 
 {% block title %}
-
 {% endblock %}
 
-
 {% block main %}
-  <h2>Pick a timeslot</h2>
+  <p>today: {{ todays_date }}</p>
+  <p>bookings from now on:</p>
+  {% for item in bookings %}
+    <p>{{ item }}</p>
+  {% endfor %}
 
+  <span>selected: {{ selected_date }}</span>
+
+  {% for item in bookings %}
+    {% if item[3] > todays_date %}
+      <p>{{ item[3] }}</p>
+    {% endif %}
+  {% endfor %}
+  <h3>Pick a timeslot</h3>
+ 
   <div class="timeslotsWrapper">
     {% for timeslot in timeslots %}
-      
+      {% for item in bookings %}
+        {% if item[3] == selected_date and item[2] == timeslot %}
+          <a href="/confirm">
+            <button class="timeslot inactive" disabled>{{ timeslot }}</button>
+          </a>
+      {{ continue }}
+      {% endif %}
+      {% endfor %}
       <a href="/confirm">
-        <button class="timeslot">{{ timeslot }}</button>
+        <button class="timeslot active">{{ timeslot }}</button>
       </a>
     {% endfor %}
   </div>
+  <a class="navLink" href="/dates/page/">Go back</a>
 
-  <a class="navLink" href="/dates/page/" id="backToCal">Go back</a>
-  
 {% endblock %}
+
+    
+     
+    
+ 

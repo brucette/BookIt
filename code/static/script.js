@@ -1,24 +1,32 @@
 const navToggle = document.querySelectorAll(".nav-toggle");
 const sidebar = document.querySelector(".sidebar");
 const navIcon = document.querySelectorAll(".navIcon");
-console.log('navIcons are:', navIcon)
 const hamburger = document.querySelector("#hamburger");
 
-
+// Shows mobile and tablet navigation menu
 navToggle.forEach(item => {
   item.addEventListener("click", () => {
-    // item.classList.toggle("hidden");
     sidebar.classList.toggle("open");
     navIcon.forEach(icon => {
         icon.classList.toggle("hidden");
     })
 })})
 
+// Put the month the user is looking at in the calendar into local storage
 let month = document.querySelector(".month")
 if (month) {
   localStorage.setItem("month", month.innerHTML);
 } 
 
+// Empty local storage when user logs out
+let logout = document.querySelector("#logout")
+logout.addEventListener("click", function() {
+  localStorage.removeItem("selectedDate");
+  localStorage.removeItem("year");
+  localStorage.removeItem("selectedTime");
+})
+
+// Put the year into local storage
 let year = document.querySelector(".year")
 if (year) {
   localStorage.setItem("year", year.innerHTML);
@@ -29,24 +37,11 @@ let times = document.querySelectorAll(".timeslot")
 let cancelButtons = document.querySelectorAll(".cancel")
 const nextButton = document.querySelector(".next")
 
-// Event listener for cancel button for a booking
-cancelButtons.forEach((button) => {
-  button.addEventListener("click", function() {
-    localStorage.setItem("canceledBooking", button.id);
-    window.alert("OK!")
-    console.log("month")
-  })
-})
-
-// nextButton.addEventListener("click", function() {
-//   window.alert("OK!")
-//   console.log("month")
-// })
-
 // Add event listener to all days on the calendar view
 bookingLinks.forEach((bookingLink) => {
   bookingLink.addEventListener("click",  function() {
     localStorage.setItem("selectedDate", bookingLink.innerHTML);
+    setTimeout(document.location.href = 'http://localhost:8989/middle', 5000); 
     console.log('selected:', localStorage.getItem("selectedDate"));
   })
 })
@@ -55,9 +50,18 @@ bookingLinks.forEach((bookingLink) => {
 times.forEach((time) => {
   time.addEventListener("click",  function() {
     localStorage.setItem("selectedTime", time.innerHTML);
-        console.log('selected:', localStorage.getItem("selectedTime"));
-    })
+    console.log('selected:', localStorage.getItem("selectedTime"));
+  })
 })
+
+// Event listener for cancel button for a booking
+// cancelButtons.forEach((button) => {
+//   button.addEventListener("click", function() {
+//     localStorage.setItem("canceledBooking", button.id);
+//     window.alert("OK!")
+//     console.log("month")
+//   })
+// })
 
 // Event listener to back button going to the calendar view, for if user goes back to pick a different day
 let backToCal = document.getElementById("backToCal")
@@ -76,13 +80,13 @@ if (backToDay) {
 }
 
 let confirmedDay = localStorage.getItem("selectedDate") //parseInt()
-console.log('typeof confirmedDay:', typeof confirmedDay)
+console.log('typeof confirmedDay:', typeof confirmedDay, confirmedDay)
 
 let confirmedMonth = localStorage.getItem("month")
-console.log('month is:', confirmedMonth)
+// console.log('month is:', confirmedMonth)
 
 let confirmedYear = localStorage.getItem("year") //parseInt()
-console.log('typeof confirmedYear:', typeof confirmedYear)
+// console.log('typeof confirmedYear:', typeof confirmedYear)
 
 let confirmedTime = localStorage.getItem("selectedTime")
 
@@ -91,11 +95,21 @@ function getMonthNumberFromName(monthName) {
 }
 
 let monthNumber = getMonthNumberFromName(confirmedMonth)
-console.log('monthNUM is:', monthNumber)
+// console.log('monthNUM is:', monthNumber)
 
-document.getElementById("confirmDay").value = confirmedDay + '/' + (monthNumber+1).toString() + '/' + confirmedYear
-// document.getElementById("confirmDay").value = confirmedDay + ' ' + confirmedMonth + ' ' + confirmedYear
-// document.getElementById("confirmDay").value = new Date(confirmedYear, monthNumber, confirmedDay)
+let selectedDay = document.getElementById("selectedDay");
+if (selectedDay) {
+  selectedDay.value = confirmedDay + '/' + (monthNumber+1).toString() + '/' + confirmedYear
+  console.log('typ:', selectedDay.value)
+}
+
+let confirmDay = document.getElementById("confirmDay");
+if (confirmDay) {
+  confirmDay.value = confirmedDay + '/' + (monthNumber+1).toString() + '/' + confirmedYear
+}
+
+// document.getElementById("selectedDate").value = confirmedDay + '/' + (monthNumber+1).toString() + '/' + confirmedYear
+// document.getElementById("confirmDay").value = confirmedDay + '/' + (monthNumber+1).toString() + '/' + confirmedYear
 document.getElementById("confirmTime").value = confirmedTime
 
 

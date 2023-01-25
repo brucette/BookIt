@@ -1,19 +1,18 @@
 {% extends "layout.html" %}
 
 {% block main %}
+  <h3>Your time:</h3>
+  <form action="/confirm" method="post" class="confirmation-form">
+    <input hidden id="done" name="done" value=""/>
+    <div class="inputwrap">
+      <input readonly id="confirmDay" name="confirmDay" value="" class="disabledInput" />
+      <input readonly id="confirmTime" name="confirmTime" value="" class="disabledInput" />
+    </div>
+    <button type="submit" class="actionBtn">Confirm</button>
+  </form>
 
-  
-    <h4>Your time:</h4>
-    <form action="/confirm" method="post" class="confirmation-form">
-        <input hidden id="done" name="done" value=""/>
-        <div class="inputwrap">
-          <input readonly id="confirmDay" name="confirmDay" value="" class="disabledInput" />
-          <input readonly id="confirmTime" name="confirmTime" value="" class="disabledInput" />
-        </div>
-        
-        <button type="submit" class="confirm">Confirm</button>
-    </form>
-
-  <a class="navLink" href="/dayview" id="backToDay">Go back</a>
-    
+  <form action="/dayview" method="post">
+    <input readonly id="selectedDay" name="selectedDay" value="" class="selected"/>
+    <button type="submit" id="backToDay" class="navLink">Go back</button>
+  </form>
 {% endblock %}

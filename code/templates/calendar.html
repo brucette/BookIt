@@ -1,36 +1,30 @@
 {% extends "layout.html" %}
 
 {% block title %}
-  Calendar
+  <h2>Select a day</h2>
 {% endblock %}
 
 {% block main %}
-<h2 class="month">{{ monthName }}</h2>
-<h2 class="year">{{ year }}</h2>
+
+<h3 class="month">{{ monthName }}</h3>
+<h3 class="year">{{ year }}</h3>
 
 <div class="back-or-forward">
   <div class="back">
   {% if page > 1 %}
-    <a class="move" href=/dates/page/{{ page - 1 }}><<<</a>
+    <a class="move" href=/dates/page/{{ page - 1 }}>< Earlier</a>
   {% endif %}
   </div> 
   <div class="forward">
   {% if page < 3 %}
-    <a class="move" href=/dates/page/{{ page + 1 }}>>>></a>
+    <a class="move" href=/dates/page/{{ page + 1 }}>Later ></a>
   {% endif %}
   </div>
 </div>
-  
-  <table>
+  <table class="calendar">
     <thead>
       <tr class="week-header">
-        <th>Mon</th>
-        <th>Tue</th>
-        <th>Wed</th>
-        <th>Thu</th>
-        <th>Fri</th>
-        <th>Sat</th>
-        <th>Sun</th>
+        <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
       </tr>
     </thead>
 
@@ -38,25 +32,26 @@
       {% for item in month %}
         <tr>
           {% for element in item %}
-
             {% if element == 0 %}
               <td class="cal-btn">
                 <a href="#">{{' '}}</a>
               </td>
-            {% elif element < today %}
+            {% elif element < today and page == 1 %}
               <td class="cal-btn">
                 <a class="deactiveLink" href="#">{{ element }}</a>
+                <!-- <button class="deactiveLink" disabled>{{ element }}</button> -->
               </td>
             {% elif page == 1 and element == today %}
               <td class="cal-btn">
-                <a class="bookingLink today" href="/dayview">{{ element }}</a>
+                <a class="bookingLink today">{{ element }}</a>
+                <!-- <button type="submit" class="bookingLink today">{{ element }}</button> href="/middle"-->
               </td>  
             {% else %}
               <td class="cal-btn">
-                <a class="bookingLink" href="/dayview">{{ element }}</a>
+                <a class="bookingLink">{{ element }}</a>
+                <!-- <button type="submit" class="bookingLink">{{ element }}</button> href="/middle"-->
               </td>
             {% endif %}
-
           {% endfor %}
         </tr>
       {% endfor %}

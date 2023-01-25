@@ -3,17 +3,18 @@
 {% block main %}
 
   <div>
-    <h4>Your time was: {{ booking_time }}</h4>
-    <h4>Your day was: {{ booking_date }}</h4>
-    <h4>Your id: {{ current_user }}</h4>
-    <h4>Your email: {{ email[0] }}</h4>
+    <h3>Your booking is confirmed.</h3>
+  </div>
+  
+  <div class="wrapper"> 
+    <svg class="checkmark" 
+         xmlns="http://www.w3.org/2000/svg" 
+         viewBox="0 0 52 52"> 
+        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/> 
+        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    </svg>
   </div>
 
+  <a class="navLink" href="/userpage">View your bookings</a>
 
-  <input class="checkbox" type="checkbox" value="checked" />
-  
-
-  <a class="navLink" href="/userpage">View my bookings</a>
-  <a class="navLink" href="/welcome">Done</a>
-    
 {% endblock %}
