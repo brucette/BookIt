@@ -5,13 +5,23 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/login" method="post">
-        <div class="inputWrap">
-            <input class="formInput" autocomplete="off" id="email" name="email" placeholder="Email address" type="text">
-        </div>
-        <div class="inputWrap">
-            <input class="formInput" id="password" name="password" placeholder="Password" type="password">
-        </div>
-        <button class="actionBtn" type="submit">Sign In</button>
-    </form>
+  <form action="/login" method="post" class="sign-in-form">
+    <div class="inputWrap">
+            <input class="formInput" 
+                   autocomplete="off" 
+                   id="email" 
+                   name="email" 
+                   placeholder="Email address" 
+                   type="text">
+    </div>
+    <div class="inputWrap">
+      <input class="formInput" 
+            id="password" 
+            name="password" 
+                placeholder="Password" 
+                type="password">
+    </div>
+    
+    <button class="actionBtn" type="submit">Sign In</button>
+  </form>
 {% endblock %}

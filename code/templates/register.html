@@ -5,25 +5,51 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/register" method="post">
-        <div class="inputWrap">
-            <input class="formInput" autocomplete="off" id="email" name="email" placeholder="Email address" type="email">
-        </div>
-        <div class="inputWrap">
-            <input class="formInput" id="password" name="password" placeholder="Password" type="password">
-        </div>
-        <div class="inputWrap">
-            <input class="formInput" id="verify_password" name="confirmation" placeholder="Verify password" type="password">
-        </div>
-        <div class="inputWrap">
-            <input class="formInput" id="first_name" name="first_name" placeholder="First name" type="text">
-        </div>
-        <div class="inputWrap">
-            <input class="formInput" id="last_name" name="last_name" placeholder="Last name" type="text">
-        </div>
-        <div class="inputWrap">
-            <input class="formInput" id="apartment" name="apartment" placeholder="Apartment number" type="text">
-        </div>
-        <button class="" type="submit">Register</button>
-    </form>
+  <form action="/register" method="post" class="sign-in-form">
+    <div class="inputWrap">
+      <input class="formInput" 
+             autocomplete="off" 
+             id="email" 
+             name="email" 
+             placeholder="Email address" 
+             type="email">
+    </div>
+    <div class="inputWrap">
+      <input class="formInput" 
+             id="password" 
+             name="password" 
+             placeholder="Password" 
+             type="password">
+    </div>
+    <div class="inputWrap">
+      <input class="formInput" 
+             id="verify_password" 
+             name="confirmation" 
+             placeholder="Verify password" 
+             type="password">
+    </div>
+    <div class="inputWrap">
+      <input class="formInput" 
+             id="first_name" 
+             name="first_name" 
+             placeholder="First name" 
+             type="text">
+    </div>
+    <div class="inputWrap">
+      <input class="formInput" 
+             id="last_name" 
+             name="last_name" 
+             placeholder="Last name" 
+             type="text">
+    </div>
+    <div class="inputWrap">
+      <input class="formInput" 
+             id="apartment" 
+             name="apartment" 
+             placeholder="Apartment number" 
+             type="text">
+    </div>
+    
+    <button class="actionBtn" type="submit">Register</button>
+  </form>
 {% endblock %}

@@ -8,7 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;family=Monoton&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;family=Amita&amp;display=swap" rel="stylesheet">
   <link href="/static/styles.css" rel="stylesheet">
+  <link href="/static/stylesheet.css" rel="stylesheet">
   <link type="image/png" sizes="16x16" rel="icon" href="/static/icons8-calendar-16.png">
   <title>BookIt</title>
 </head>
@@ -23,36 +25,30 @@
       <span class="navIcon close hidden">X</span>
     </div>
 
-    <p>
-      Bookit is a booking system for the use of our communal area for any festive occasions. 
+    <p class="intro">
+      Bookit is a booking system for the use of 
+      our communal area for any festive occasions. 
       Here you can..
     </p>
 
     <section class="navigate">
-        <ul>
-          {% if session["user_id"] %}
-          <li>
-            <a class="navLink" href="/logout" id="logout">Log Out</a>
-          </li> 
-          <li>
-            <a class="navLink" href="/userpage">My bookings</a>
-          </li>
-          {% else %}
-          <li>
-            <a class="navLink" href="/login">Login</a>
-          </li>
-          <li>
-            <a class="navLink" href="/register">Register</a>
-          </li>
-          {% endif %}
-        </ul>
+      {% if session["user_id"] %}
+        <a class="navLink" href="/">Home</a>
+        <a class="navLink" href="/dates/page/">Make a booking</a>
+        <a class="navLink" href="/userpage">My bookings</a>
+        <a class="navLink" href="/logout" id="logout">Log Out</a>
+      {% else %}
+        <a class="navLink" href="/login">Login</a>
+        <a class="navLink" href="/register">Register</a>
+        <a class="navLink" href="/">Home</a>
+      {% endif %}
     </section>
   </nav>
     
     <main class="container">
-      <h2>
+      <h3>
         {% block title %}{% endblock %}
-      </h2>
+      </h3>
       {% block main %}{% endblock %}
     </main>
     <script

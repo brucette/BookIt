@@ -190,6 +190,7 @@ def confirm():
 # @login_required
 def index():
     """Renders landing page of the booking system"""
+
     return render_template("index.html")
 
 
@@ -204,7 +205,7 @@ def welcome():
     user = result.fetchone()
 
     db_connection.close()
-    return render_template("welcome.html", user=user)
+    return render_template("index.html", user=user)
 
 
 # LOGIN ROUTE
@@ -242,7 +243,7 @@ def login():
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
 
-          # Redirect user to home pgae
+        # Redirect user to home pgae
         return redirect("/welcome")
 
     # User reached route via GET (as by clicking a link or via redirect)
@@ -258,7 +259,7 @@ def logout():
     session.clear()
 
     # Redirect user to login form
-    return redirect("/login")
+    return redirect("/")
 
 
 # REGISTER ROUTE

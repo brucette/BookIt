@@ -8,31 +8,31 @@
   <table class="bookings">
     <thead>
       <tr>
-        <th>Booking</th>
-        <th>Time</th>
-        <th>Date</th>
-        <th>Action</th>
+        <th class="booking-header first">Booking</th>
+        <th class="booking-header">Time</th>
+        <th class="booking-header">Date</th>
+        <th class="booking-header">Action</th>
       </tr>
     </thead>
     <tbody>
       {% for item in bookings %}
       <tr class="row">
-        <td>{{ item[0] }}</td>
-        <td>{{ item[2] }}</td>
-        <td>{{ item[3] }} </td>
+        <td class="booking-content">{{ item[0] }}</td>
+        <td class="booking-content">{{ item[2] }}</td>
+        <td class="booking-content">{{ item[3] }} </td>
         {% if item[3] > current_date %}
-          <td>
+          <td class="booking-content">
             <form action="/userpage" method="post">
               <input readonly id="selectedRow" name="selectedRow" value={{ item[0] }} class="selected"/>
               <button type="submit" class="actionBtn cancel">cancel</button>
             </form>
           </td>
         {% elif item[3] == current_date %}
-          <td class="today">
+          <td class="booking-content today">
             today
           </td>
         {% else %}
-          <td class="complete">
+          <td class="booking-content">
             completed
           </td>
         {% endif %}

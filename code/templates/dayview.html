@@ -1,13 +1,12 @@
 {% extends "layout.html" %}
 
 {% block title %}
+  Pick a timeslot
 {% endblock %}
 
 {% block main %}
-
-  <h3>Pick a timeslot</h3>
- 
-  <div class="timeslotsWrapper">
+<section class="landing-container">
+  <!-- <div class="timeslotsWrapper"> -->
     {% for item in timeslot_taken %}
       {% if item[1] == True %}
         <a href="/confirm">
@@ -19,7 +18,8 @@
         </a>
       {% endif %}
     {% endfor %}
-  </div>
+  <!-- </div> -->
+</section>
   <a class="navLink" href="/dates/page/">Go back</a>
 
 {% endblock %}

@@ -1,7 +1,11 @@
 {% extends "layout.html" %}
 
+{% block title %}
+  Your time:
+{% endblock %}
+
 {% block main %}
-  <h3>Your time:</h3>
+
   <form action="/confirm" method="post" class="confirmation-form">
     <input hidden id="done" name="done" value=""/>
     <div class="inputwrap">
@@ -15,4 +19,5 @@
     <input readonly id="selectedDay" name="selectedDay" value="" class="selected"/>
     <button type="submit" id="backToDay" class="navLink">Go back</button>
   </form>
+  
 {% endblock %}

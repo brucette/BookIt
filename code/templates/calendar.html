@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-  <h2>Select a day</h2>
+  Select a day
 {% endblock %}
 
 {% block main %}
@@ -39,17 +39,14 @@
             {% elif element < today and page == 1 %}
               <td class="cal-btn">
                 <a class="deactiveLink" href="#">{{ element }}</a>
-                <!-- <button class="deactiveLink" disabled>{{ element }}</button> -->
               </td>
             {% elif page == 1 and element == today %}
               <td class="cal-btn">
                 <a class="bookingLink today">{{ element }}</a>
-                <!-- <button type="submit" class="bookingLink today">{{ element }}</button> href="/middle"-->
               </td>  
             {% else %}
               <td class="cal-btn">
                 <a class="bookingLink">{{ element }}</a>
-                <!-- <button type="submit" class="bookingLink">{{ element }}</button> href="/middle"-->
               </td>
             {% endif %}
           {% endfor %}

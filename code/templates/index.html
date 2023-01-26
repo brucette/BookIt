@@ -1,14 +1,18 @@
 {% extends "layout.html" %}
 
-{% block title %}
-    
+{% block title %} 
 {% endblock %}
 
 {% block main %}
 
-  <h1 class="bookit">BookIt</h1>
-  <div class="start-image">
-    <img class="rooftop" src="static/rooftop.jpg" alt="rooftop"/>
-  </div>
+  <section class="landing-container">
+    <h1 class="bookit">BookIt</h1>
+    {% if session["user_id"] %}
+      <h3 class="welcome">Welcome {{ user[0] }} !</h3>
+    {% endif %}
+    <div class="start-image">
+      <img class="rooftop" src="static/rooftop.jpg" alt="rooftop"/>
+    </div>
+  </section>
 
 {% endblock %}
