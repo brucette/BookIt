@@ -2,6 +2,12 @@
 orange: DD6D4F
 Grey: #DAE1E7 */
 
+ /* {% for timeslot in timeslots %} -->
+      <!-- <a href="/confirm">
+        <button class="timeslot {% for item in bookings %}{% if item[3] != selected_date and item[2] != timeslot %}active"{% else %}inactive" disabled{% endif %}{% endfor %} >{{ timeslot }}</button>
+      </a>  */
+
+
 body {
   font-family: Montserrat;
   margin: 0;
@@ -286,21 +292,21 @@ h2, h3 {
   /* font-weight: bold; */
   font-size: 1rem;
   margin: 1rem 0;
-  cursor: pointer;
   letter-spacing: 2px;
-}
-
-.timeslot:hover {
-  background-color: #1D4C82;
-  color: aliceblue;
-  box-shadow: 0 0 11px rgba(33,33,33,.2);
-  -webkit-transform: translateY(-4px);
 }
 
 .active {
   background-color: green;
   opacity: 0.8;
   color: white;
+  cursor: pointer;
+}
+
+.active:hover {
+  background-color: #1D4C82;
+  color: aliceblue;
+  box-shadow: 0 0 11px rgba(33,33,33,.2);
+  -webkit-transform: translateY(-4px);
 }
 
 .inactive {

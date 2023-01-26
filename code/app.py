@@ -119,8 +119,8 @@ def dayview():
     todays_date = str(today) + '/' + str(current_month_number) + '/' + str(current_year)
 
     # Get current time
-    t = time.localtime()
-    current_time = time.strftime("%H:%M", t)
+    # t = time.localtime()
+    # current_time = time.strftime("%H:%M", t)
 
     # Get all made bookings from this point onwards
     db_connection = get_db()
@@ -134,18 +134,19 @@ def dayview():
     # Close the connection
     db_connection.close()
 
-    # if request.method == "GET":
-    #     return render_template("dayview.html", 
-    #                             selected_date=selected_date,
-    #                             timeslots=timeslots,
-    #                             bookings=bookings, 
-    #                             todays_date=todays_date)
+    # Empty list for adding timeslot types
+    timeslot_taken = []
+
+    for timeslot in timeslots:
+        for item in bookings:
+            if item[3] == selected_date and item[2] == timeslot:
+                timeslot_taken.append([timeslot, True])
+                break
+        else:
+            timeslot_taken.append([timeslot, False])
 
     return render_template("dayview.html", 
-                            selected_date=selected_date,
-                            timeslots=timeslots,
-                            bookings=bookings, 
-                            todays_date=todays_date)
+                            timeslot_taken=timeslot_taken)
 
 
 @app.route('/confirm', methods=["GET", "POST"])
