@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block main %}
+<span class="move">{{ selected_date }}</span>
 <section class="landing-container">
-  <!-- <div class="timeslotsWrapper"> -->
+  <div class="timeslotsWrapper">
     {% for item in timeslot_taken %}
       {% if item[1] == True %}
         <a href="/confirm">
@@ -18,7 +19,7 @@
         </a>
       {% endif %}
     {% endfor %}
-  <!-- </div> -->
+  </div>
 </section>
   <a class="navLink" href="/dates/page/">Go back</a>
 

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-  Your time:
+  Selected booking
 {% endblock %}
 
 {% block main %}
@@ -11,7 +11,9 @@
     <div class="inputwrap">
       <input readonly id="confirmDay" name="confirmDay" value="" class="disabledInput" />
       <input readonly id="confirmTime" name="confirmTime" value="" class="disabledInput" />
+      <textarea id="notes" name="notes" value="" class="instruct" placeholder="Add any notes to your booking here"></textarea>
     </div>
+   
     <button type="submit" class="actionBtn">Confirm</button>
   </form>
 

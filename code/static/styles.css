@@ -1,8 +1,4 @@
 /* Blue : 1D4C82 orange: DD6D4F Grey: #DAE1E7 */
- /* {% for timeslot in timeslots %} -->
-      <!-- <a href="/confirm">
-        <button class="timeslot {% for item in bookings %}{% if item[3] != selected_date and item[2] != timeslot %}active"{% else %}inactive" disabled{% endif %}{% endfor %} >{{ timeslot }}</button>
-      </a>  */
 body {
   font-family: Montserrat;
   margin: 0;
@@ -12,7 +8,9 @@ body {
 /** Landing page **/
 
 .bookit {
-  font-size: 3rem;
+  font-size: 2rem;
+  margin: 0;
+  padding: 0.6rem;
   /* font-family: Monoton, cursive;
   font-family: wox-striped_triple_demoRg; */
   font-family: Amita, cursive;
@@ -21,24 +19,22 @@ body {
 }
 
 .rooftop {
-  height: 55vh;
+  height: 50vh;
   border-radius: 10px;
-  margin: 2rem;
 }
 
 .landing-container {
-  width: 96%;
-  height: 70%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #eee;
   border-radius: 12px;
+  padding: 1rem 0;
 }
 
 .nav-toggle {
-  /* border: 2px solid green; */
   margin: 0;
   padding: 0;
 }
@@ -76,10 +72,6 @@ body {
   transition: all 0.25s ease-in-out 0s;
 }
 
-.current-user {
-  float: left;
-}
-
 .welcome {
   color: #DD6D4F;
   font-weight: 100;
@@ -98,7 +90,6 @@ body {
 }
 
 .navigate {
-  border: 2px solid green;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -129,14 +120,13 @@ body {
 }
 
 .container {
-  border: 2px solid green;
-  /* margin-left: 17vw; */
-  width: 98%;
+  /* border: 2px solid green; */
+  width: 95%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 0 auto;
+  margin: 1rem auto;
 }
 
 /** Sign In page **/
@@ -165,15 +155,6 @@ body {
   transform: translateY(3px);
 }
 
-.filled {
-  background-color: #DD6D4F;
-  color: white;
-  width: 13rem;
-  margin: 1rem;
-  padding: 1rem;
-  font-size: larger;
-}
-
 a {
   text-decoration: none;
 }
@@ -188,15 +169,13 @@ a {
 
 .move {
   color: #DD6D4F;
+  margin-bottom: 1rem;
 }
 
-
-
 .cal-btn {
-  /* border: 1px solid #666; */
-  /* padding: 1.5rem 0; */
+  /* padding: 1rem 0; */
   width: 14%;
-  height: 2.5rem;
+  height: 3rem;
   text-align: center;
   font-weight: bold;
   border: 1px solid #DD6D4F;
@@ -208,12 +187,11 @@ a {
 }
 
 .bookingLink, .deactiveLink {
-  /* padding: 3rem 3.9rem; */
-  width: 14%;
-  height: 2rem;
+  padding: 20% 24%;
+  width: 8%;
+  /* height: 2rem; */
   background-color: white;
   color: #1D4C82;
-  border: none;
   margin: 2px;
   font-weight: bold;
 }
@@ -246,29 +224,17 @@ a {
 
 .forward, .back {
   display: flex;
-  letter-spacing:5px;
+  letter-spacing: 5px;
   width: 50%;
 }
 
 .calendar {
-  border: 2px solid purple;
-  width: 100%;
+  width: 98%;
 }
 
 .week-header {
   height: 4rem;
 }
-
-.cal-btn {
-  /* border: 1px solid #666; */
-  /* font-weight: bold; */
-  padding: 0.7rem 0;
-  width: 14%;
-  height: 2.5rem;
-  text-align: center;
-  border: 1px solid #DD6D4F;
-  border-radius: 3px;
-} 
 
 h2, h3 {
   color: #1D4C82;
@@ -277,53 +243,52 @@ h2, h3 {
 .timeslotsWrapper {
   display: flex;
   flex-direction: column;
-  margin-bottom: 2rem;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
 }
 
 .timeslot {
-  width: 10rem;
+  width: 12rem;
   padding: 0.7rem 1rem;
   border-radius: 2.5rem;
-  border: 1px solid #1D4C82;
-  /* background-color: bisque; */
-  /* color: #666; */
-  /* color: black; */
-  /* font-weight: bold; */
+  border: 2px solid #DD6D4F;
   font-size: 1rem;
   margin: 1rem 0;
   letter-spacing: 2px;
 }
 
 .active {
-  background-color: green;
-  opacity: 0.8;
+  background-color: rgb(3, 130, 152);
   color: white;
   cursor: pointer;
 }
 
 .inactive {
-  background-color: red;
+  background-color: rgb(3, 130, 152);
   opacity: 0.7;
   text-decoration:line-through;
-  color: black;
+  color: white;
 }
 
-.inputwrap{
+.inputwrap {
   border: 1px solid grey;
   border-radius: 5px;
   padding: 1rem;
   box-shadow:  10px 5px 5px #666;
   width: 80%;
+  margin-bottom: 1rem;
 }
 
 .disabledInput {
   border: none;
   background-color: white;
-  color: black;
+  color: #666;
   display: block;
   margin: 1rem 0;
   font-size: 1.2rem;
   letter-spacing: 1px;
+  font-family: Montserrat;
 }
 
 .selected {
@@ -337,11 +302,6 @@ h2, h3 {
   float: left;
   font-weight: 100;
   color: #555;
-}
-
-table {
-  /* border: 2px solid blue; */
-  width: 70%;
 }
 
 th {
@@ -360,7 +320,7 @@ th {
   border-radius: 5px;
   box-shadow:  10px 5px 5px #777;
   width: 80%;
-  margin-bottom: 2rem;
+  margin: 2rem 0;
 }
 
 .checkmark__circle {
@@ -413,16 +373,51 @@ th {
 }
 
 .bookings {
-  width: 98%;
+  width: 70%;
+  /* display: flex;
+  flex-direction: column; */
   border: 2px solid #eee;
-  border-radius: 5px;
-  /* box-shadow:  10px 5px 5px #fff; */
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  box-shadow:  4px 4px 4px #777;
 }
 
-.row {
-  padding: 0.8rem 0;
-  height: 4rem;
-  text-align: center;
+.date-and-status {
+  display: flex;
+  justify-content: space-between;
+}
+
+.date {
+  font-size: larger;
+  font-weight: 700;
+  color: #666;
+}
+
+.by {
+  margin-bottom: 1rem;
+}
+
+.instructions {
+  display: flex;
+}
+
+.notes {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #666;
+}
+
+.the-note {
+  margin-left: 2rem;
+}
+
+.instruct {
+  width: 80%;
+  height: 3rem;
+  border-radius: 5px;
+  border: 2px solid #eee;
+  padding: 0.4rem;
 }
 
 .booking-header {
@@ -439,7 +434,11 @@ th {
   font-size: 1rem;
 }
 
-.cancel {
+.completed {
+  color: #7ac142;
+}
+
+.cancel, .today, .completed {
   width: fit-content;
   padding: 0.5rem 0.7rem;
 }
@@ -456,11 +455,54 @@ th {
     padding: 1rem 1rem;
     transition: all 0.5s ease;
   }
+
+  .landing-container {
+    width: 70%;
+    padding: 2rem 0;
+  }
+
+  .open {
+    padding: 1rem; 
+    width: 100%;
+    transition: all 0.25s ease-in-out 0s;
+  }
+
+  .cal-btn {
+    height: 5rem;
+    border-radius: 3px;
+  } 
+
+  .bookingLink, .deactiveLink {
+    padding: 21% 32%;
+    width: 8%;
+    margin: 3px;
+  }
+
+  .inputwrap {
+    margin: 1rem 0;
+    width: 70%;
+  }
+
+  .wrapper {
+    height: 30vh;
+    width: 70%;
+    margin: 3rem 0;
+  }
+
+  .checkmark {
+    width: 60px;
+    height: 60px;
+  }
+
 }
 
 
 /* ********* LAPTOP ************** */
 @media (min-width: 1024px) {
+
+  .bookit {
+    font-size: 4.5rem;    
+  }
 
   .actionBtn:hover {
     background-color: #DAE1E7;
@@ -481,40 +523,39 @@ th {
     position: fixed;
     top: 0;
     left: 0;
-    width: 15vw;
+    width: 18%;
     height: 100%;
     padding: 1rem 1rem;
-    margin-right: 17vw;
-    transition: all 0.5s ease;
+    /* transition: all 0.5s ease; */
   }
 
-  
+  .welcome {
+    font-size: 0.9rem;
+  }
 
   .container {
     width: 60%;
-    justify-content: start;
+    margin: 5% 18%;
+    padding: 0 11%;
   }
 
-  form {
-    width: 20%;
+  .sign-in-form, .confirmation-form {
+    width: 40%;
     text-align: center;
   }
 
-  .bookit {
-    font-size: 5rem;
-    /* font-family: Monoton, cursive;
-    font-weight: 400; */
-    font-family: Amita, cursive;
-    font-weight: 400;
-    color: #DD6D4F;
-  }
+  .cal-btn {
+    height: 4.5rem;
+  } 
 
-  .filled:hover {
-    size: 1.5;
+  .bookingLink, .deactiveLink {
+    padding: 25% 33%;
+    width: 8%;
+    margin: 3px;
   }
 
   .bookingLink:hover {
-    background-color: #DAE1E7;
+    background-color: #eee;
     border-radius: 3px;
     cursor: pointer;
   }
@@ -530,11 +571,9 @@ th {
     cursor: pointer;
     letter-spacing: 5px;
     width: 50%;
-    /* font-weight: bold; */
   }
   
   .calendar {
-    border: 2px solid purple;
     width: 70%;
   }
 
@@ -550,6 +589,26 @@ th {
     color: aliceblue;
     box-shadow: 0 0 11px rgba(33,33,33,.2);
     -webkit-transform: translateY(-4px);
+  }
+
+  .inputwrap {
+    margin: 1rem 0;
+    width: 100%;
+  }
+  
+  .instruct {
+    width: 80%;
+    float: left;
+    height: 3rem;
+    border-radius: 5px;
+    border: 2px solid #eee;
+    padding: 0.4rem;
+    overflow-wrap: break-word;
+    resize: none;
+  }
+
+  .bookings {
+    width: 60%;
   }
 }
 

@@ -52,8 +52,11 @@ def __init_db(database_path):
 
     bookings_table = "CREATE TABLE user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\
             email TEXT NOT NULL, \
+            first_name TEXT NOT NULL,\
+            apartment INT NOT NULL),\
             booking_time TEXT NOT NULL, \
-            booking_date TEXT NOT NULL)"
+            booking_date TEXT NOT NULL), \
+            notes TEXT)"
 
     cursor.execute(users_table)
     cursor.execute("CREATE UNIQUE INDEX email ON users(email)")
@@ -68,6 +71,7 @@ def __init_db(database_path):
 def index():
     """Renders landing page of the booking system"""
     return render_template("index.html")
+
 
 # REGISTER ROUTE
 @app.route("/register", methods=["GET", "POST"])
@@ -251,16 +255,20 @@ def dayview():
 
     selected_date = request.form.get("selectedDay")
 
-    # Get today's date
-    todays_date = str(today) + '/' + str(current_month_number) + '/' + str(current_year)
+    # Convert selected date into a datetime date to make comparing and sorting possible
+    comp_date = datetime.datetime.strptime(selected_date, "%d/%m/%Y").date()
 
+    # Get today's date and 
+    # todays_date = str(today) + '/' + str(current_month_number) + '/' + str(current_year)
+    
     # Get current time
     # t = time.localtime()
     # current_time = time.strftime("%H:%M", t)
 
     # Get all made bookings from this point onwards
     db_connection = get_db()
-    query = f'SELECT * FROM user_bookings WHERE booking_date>="{todays_date}"'
+    #query = f'SELECT * FROM user_bookings WHERE booking_date>="{todays_date}"'
+    query = f'SELECT * FROM user_bookings'
     result = db_connection.execute(query)
     bookings = result.fetchall()
 
@@ -270,18 +278,30 @@ def dayview():
     # Close the connection
     db_connection.close()
 
+    new_bookings_list = []
+
+    # Replace dates in booking with a datetime date to make sorting possible
+    for item in bookings:
+        temp = list(item)
+        new_bookings_list.append(temp)
+
+    for item in new_bookings_list:
+        item[5] = datetime.datetime.strptime(item[5], "%d/%m/%Y").date()
+
     # Empty list for adding timeslot types
     timeslot_taken = []
 
     for timeslot in timeslots:
-        for item in bookings:
-            if item[3] == selected_date and item[2] == timeslot:
+        for item in new_bookings_list:
+            if item[5] == comp_date and item[4] == timeslot:
                 timeslot_taken.append([timeslot, True])
                 break
         else:
             timeslot_taken.append([timeslot, False])
 
     return render_template("dayview.html", 
+                            selected_date=selected_date,
+                            bookings=bookings,
                             timeslot_taken=timeslot_taken)
 
 
@@ -293,20 +313,24 @@ def confirm():
 
     booking_time = request.form.get("confirmTime")
     booking_date = request.form.get("confirmDay")
+    notes = request.form.get("notes")
     current_user = session["user_id"]
 
     # Insert booking into users booking table:
 
     db_connection = get_db()
 
-    query1 = f'SELECT email FROM users WHERE id="{session["user_id"]}"'
+    query1 = f'SELECT email, first_name, apartment FROM users WHERE id="{session["user_id"]}"'
     result = db_connection.execute(query1)
-    email = result.fetchone()
+    identifiers = result.fetchall()
+    email = identifiers[0][0]
+    first_name = identifiers[0][1]
+    apartment = identifiers[0][2]
 
     # Insert the new booking into the bookings table
     cursor_obj3 = db_connection.cursor()
     query3 = f'INSERT INTO user_bookings (email, \
-            booking_time, booking_date) VALUES ("{email}", "{booking_time}", "{booking_date}")'
+            first_name, apartment, booking_time, booking_date, notes) VALUES ("{email}", "{first_name}", "{apartment}", "{booking_time}", "{booking_date}", "{notes}")'
     cursor_obj3.execute(query3)
 
     # Commit the command
@@ -338,8 +362,7 @@ def userpage():
 
         db_connection = get_db()
         query = f'DELETE FROM user_bookings WHERE id="{selected_row}"'
-        result = db_connection.execute(query)
-        #email = result.fetchone()
+        db_connection.execute(query)
 
         # Commit the command
         db_connection.commit()
@@ -348,15 +371,24 @@ def userpage():
         db_connection.close()
 
     db_connection = get_db()
-    # Get users email
-    query1 = f'SELECT email FROM users WHERE id="{session["user_id"]}"'
+
+    # Get users email, name and apartment number
+    query1 = f'SELECT email, first_name, apartment FROM users WHERE id="{session["user_id"]}"'
     result1 = db_connection.execute(query1)
-    email = result1.fetchone()
+    identifiers = result1.fetchall()
+    email = identifiers[0][0]
+    first_name = identifiers[0][1]
+    apartment = identifiers[0][2]
 
     # Get users bookings
-    query2 = f'SELECT * FROM user_bookings WHERE email="{email}"' # ORDER BY booking_date DESC
+    query2 = f'SELECT * FROM user_bookings WHERE email="{email}"'
     result2 = db_connection.execute(query2)
     bookings = result2.fetchall()
+
+    # Get all users' bookings 
+    query3 = f'SELECT * FROM user_bookings"'
+    result3 = db_connection.execute(query3)
+    all_bookings = result3.fetchall()
 
     # Commit the command
     db_connection.commit()
@@ -372,9 +404,9 @@ def userpage():
         new_bookings_list.append(temp)
 
     for item in new_bookings_list:
-        item[3] = datetime.datetime.strptime(item[3], "%d/%m/%Y").date()
+        item[5] = datetime.datetime.strptime(item[5], "%d/%m/%Y").date()
 
-    new_bookings_list.sort(key=itemgetter(3))
+    new_bookings_list.sort(key=itemgetter(5))
 
     currently = datetime.date.today()
     today = str(currently.day)
@@ -383,6 +415,9 @@ def userpage():
     current_date = datetime.datetime.strptime(today + "/" + month + "/" + year, "%d/%m/%Y").date()
 
     return render_template("bookings.html",
+                           identifiers=identifiers,
+                           first_name=first_name,
+                           apartment=apartment,
                            current_date=current_date,
                            new_bookings_list=new_bookings_list,
                            today=today,
@@ -405,4 +440,4 @@ def logout():
 __init_db(DB_FILE_PATH)
 app.run(host='0.0.0.0')
 
-# CREATE TABLE user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, booking_time TEXT NOT NULL, booking_date TEXT NOT NULL)
+# CREATE TABLE user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, first_name TEXT NOT NULL, apartment INT NOT NULL, booking_time TEXT NOT NULL, booking_date TEXT NOT NULL, notes TEXT);

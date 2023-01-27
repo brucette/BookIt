@@ -5,43 +5,44 @@
 {% endblock %}
 
 {% block main %}
- {{ bookings }}
- {{ current_date }}
-  <table class="bookings">
-    <thead>
-      <tr>
-        <th class="booking-header first">Booking</th>
-        <th class="booking-header">Time</th>
-        <th class="booking-header">Date</th>
-        <th class="booking-header">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in new_bookings_list %}
-      <tr class="row">
-        <td class="booking-content">{{ item[0] }}</td>
-        <td class="booking-content">{{ item[2] }}</td>
-        <td class="booking-content">{{ item[3] }} </td>
-        {% if item[3] > current_date %}
-          <td class="booking-content">
-            <form action="/userpage" method="post">
-              <input readonly id="selectedRow" name="selectedRow" value={{ item[0] }} class="selected"/>
-              <button type="submit" class="actionBtn cancel">cancel</button>
-            </form>
-          </td>
-        {% elif item[3] == current_date %}
-          <td class="booking-content today">
-            today
-          </td>
-        {% else %}
-          <td class="booking-content">
-            completed
-          </td>
-        {% endif %}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+
+  {% for item in new_bookings_list %}
+    <section class="bookings">
+      <div class="date-and-status">
+        <div class="date">
+          <p>{{ item[5] }}</p>
+        </div>
+      {% if item[5] > current_date %}
+        <div class="status">
+          <form action="/userpage" method="post">
+          <input readonly id="selectedRow" name="selectedRow" value={{ item[0] }} class="selected"/>
+          <button type="submit" class="actionBtn cancel">cancel</button>
+          </form>
+        </div>
+      {% elif item[5] == current_date %}
+        <div class="today">
+          today
+        </div>
+      {% else %}
+        <div class="completed">
+          completed
+        </div>
+      {% endif %}
+      </div>
+      <div class="time">
+        <p>{{ item[4] }}</p>
+      </div>
+      <div class="by">
+        <span>By: </span><span> {{ first_name }},</span>
+        <span> Apt no.</span><span> {{ apartment }}</span>
+      </div>
+      {% if item[6]|length >  0  %}
+      <div class="instructions">
+        <span class="notes">Notes: </span><span class="the-note">"{{ item[6] }}"</span>
+      </div>
+      {% endif %}
+    </section>
+  {% endfor %}
 
 {% endblock %}
 
