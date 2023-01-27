@@ -3,6 +3,7 @@ import sqlite3
 import calendar
 import datetime
 import time
+from operator import itemgetter
 from os.path import exists
 from flask import Flask, redirect, render_template, session, request
 from flask_session import Session
@@ -62,8 +63,143 @@ def __init_db(database_path):
     db_connection.close()
 
 
+@app.route("/")
+# @login_required
+def index():
+    """Renders landing page of the booking system"""
+    return render_template("index.html")
+
+# REGISTER ROUTE
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    """Register user"""
+
+    # Display a form so they can register
+    if request.method == "GET":
+        return render_template("register.html")
+
+    # Check for possible errors
+    email = request.form.get("email")
+    password = request.form.get("password")
+    verify_password = request.form.get("confirmation")
+    first_name = request.form.get("first_name")
+    last_name = request.form.get("last_name")
+    apartment = request.form.get("apartment")
+
+    # Ensure email was submitted
+    if not email:
+        return apology("must provide email")
+
+    # # Ensure password was submitted
+    if not password:
+        return apology("must provide password")
+
+    # Ensure password matches verification
+    if not verify_password or password != verify_password:
+        return apology("password must match verification")
+
+    # # Ensure first name was submitted
+    if not first_name:
+        return apology("must provide first name")
+
+    # # Ensure last name was submitted
+    if not last_name:
+        return apology("must provide last name")
+
+    # # Ensure apartment number was submitted
+    if not apartment:
+        return apology("must provide apartment number")
+
+    hash_password = generate_password_hash(password)
+
+    # Insert new user into USERS table
+    try:
+        # Ensure email not already registered
+        db_connection = get_db()
+
+        # Create cursor object
+        cursor_obj = db_connection.cursor()
+
+        query = f'INSERT INTO users (hash, email, first_name, last_name, apartment) \
+                VALUES ("{hash_password}", "{email}", "{first_name}", "{last_name}", "{apartment}")'
+
+        cursor_obj.execute(query)
+
+        # Commit the command
+        db_connection.commit()
+
+        # Close the connection
+        db_connection.close()
+    except ValueError:
+        db_connection.close()
+        return apology("email is already registered")
+    else:
+        db_connection = get_db()
+        query = f'SELECT * FROM users WHERE email="{email}"'
+        result = db_connection.execute(query)
+        rows = result.fetchall()
+        db_connection.close()
+
+        session["user_id"] = rows[0][0]
+        session["user_name"] = rows[0][3]
+
+        # Redirect user to home page
+        return redirect("/welcome")
+
+
+# LOGIN ROUTE
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Login user"""
+
+    #Forget any user-id
+    session.clear()
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        #Ensure email was submitted
+        if not request.form.get("email"):
+            return apology("must provide email", 403)
+
+        # Ensure password was submitted
+        if not request.form.get("password"):
+            return apology("must provide password", 403)
+
+        # Query database for email
+        db_connection = get_db()
+        query = f'SELECT * FROM users WHERE email="{request.form.get("email")}"'
+        result = db_connection.execute(query)
+        rows = result.fetchall()
+
+        # Close the connection
+        db_connection.close()
+
+        # Ensure email exists and password is correct
+        if len(rows) != 1 or not check_password_hash(rows[0][2], request.form.get("password")):
+            return apology("invalid email and/or password", 403)
+
+        # Remember which user has logged in
+        session["user_id"] = rows[0][0]
+        session["user_name"] = rows[0][3]
+
+        # Redirect user to home pgae
+        return redirect("/welcome")
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    return render_template("login.html")
+
+
+@app.route("/welcome")
+@login_required
+def welcome():
+    """ Once logged in greet user with this page"""
+    return render_template("index.html")
+
+
 @app.route('/dates/page/', defaults={'page': 1})
 @app.route('/dates/page/<int:page>')
+@login_required
 def dates(page):
     """ Shows calendar"""
 
@@ -186,157 +322,6 @@ def confirm():
             email=email)
 
 
-@app.route("/")
-# @login_required
-def index():
-    """Renders landing page of the booking system"""
-
-    return render_template("index.html")
-
-
-@app.route("/welcome")
-@login_required
-def welcome():
-    """ Once logged in greet user with this page"""
-    # Query database for user's name
-    db_connection = get_db()
-    query = f'SELECT first_name FROM users WHERE id="{session["user_id"]}"'
-    result = db_connection.execute(query)
-    user = result.fetchone()
-
-    db_connection.close()
-    return render_template("index.html", user=user)
-
-
-# LOGIN ROUTE
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    """Login user"""
-
-    #Forget any user-id
-    session.clear()
-
-    # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
-
-        #Ensure email was submitted
-        if not request.form.get("email"):
-            return apology("must provide email", 403)
-
-        # Ensure password was submitted
-        if not request.form.get("password"):
-            return apology("must provide password", 403)
-
-        # Query database for email
-        db_connection = get_db()
-        query = f'SELECT * FROM users WHERE email="{request.form.get("email")}"'
-        result = db_connection.execute(query)
-        rows = result.fetchall()
-
-        # Close the connection
-        db_connection.close()
-
-        # Ensure email exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0][2], request.form.get("password")):
-            return apology("invalid email and/or password", 403)
-
-        # Remember which user has logged in
-        session["user_id"] = rows[0][0]
-
-        # Redirect user to home pgae
-        return redirect("/welcome")
-
-    # User reached route via GET (as by clicking a link or via redirect)
-    return render_template("login.html")
-
-
-# LOGOUT ROUTE
-@app.route("/logout")
-def logout():
-    """Log user out"""
-
-    # Forget any user_id
-    session.clear()
-
-    # Redirect user to login form
-    return redirect("/")
-
-
-# REGISTER ROUTE
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    """Register user"""
-
-    # Display a form so they can register
-    if request.method == "GET":
-        return render_template("register.html")
-
-    # Check for possible errors
-    email = request.form.get("email")
-    password = request.form.get("password")
-    verify_password = request.form.get("confirmation")
-    first_name = request.form.get("first_name")
-    last_name = request.form.get("last_name")
-    apartment = request.form.get("apartment")
-
-    # Ensure email was submitted
-    if not email:
-        return apology("must provide email")
-
-    # # Ensure password was submitted
-    if not password:
-        return apology("must provide password")
-
-    # Ensure password matches verification
-    if not verify_password or password != verify_password:
-        return apology("password must match verification")
-
-    # # Ensure first name was submitted
-    if not first_name:
-        return apology("must provide first name")
-
-    # # Ensure last name was submitted
-    if not last_name:
-        return apology("must provide last name")
-
-    # # Ensure apartment number was submitted
-    if not apartment:
-        return apology("must provide apartment number")
-
-    hash_password = generate_password_hash(password)
-
-    # Insert new user into USERS table
-    try:
-        # Ensure email not already registered
-        db_connection = get_db()
-
-        # Create cursor object
-        cursor_obj = db_connection.cursor()
-
-        query = f'INSERT INTO users (hash, email, first_name, last_name, apartment) \
-                VALUES ("{hash_password}", "{email}", "{first_name}", "{last_name}", "{apartment}")'
-
-        cursor_obj.execute(query)
-
-        # Commit the command
-        db_connection.commit()
-
-        # Close the connection
-        db_connection.close()
-    except ValueError:
-        db_connection.close()
-        return apology("email is already registered")
-    else:
-        db_connection = get_db()
-        query = f'SELECT id FROM users WHERE email="{email}"'
-        result = db_connection.execute(query)
-        session["user_id"] = result.fetchone()
-        db_connection.close()
-
-        # Redirect user to home page
-        return redirect("/welcome")
-
-
 @app.route('/confirmed')
 @login_required
 def confirmed():
@@ -369,7 +354,7 @@ def userpage():
     email = result1.fetchone()
 
     # Get users bookings
-    query2 = f'SELECT * FROM user_bookings WHERE email="{email}"'
+    query2 = f'SELECT * FROM user_bookings WHERE email="{email}"' # ORDER BY booking_date DESC
     result2 = db_connection.execute(query2)
     bookings = result2.fetchall()
 
@@ -379,18 +364,42 @@ def userpage():
     # Close the connection
     db_connection.close()
 
+    new_bookings_list = []
+
+    # Replace dates in booking with a datetime date to make sorting possible
+    for item in bookings:
+        temp = list(item)
+        new_bookings_list.append(temp)
+
+    for item in new_bookings_list:
+        item[3] = datetime.datetime.strptime(item[3], "%d/%m/%Y").date()
+
+    new_bookings_list.sort(key=itemgetter(3))
+
     currently = datetime.date.today()
     today = str(currently.day)
     month = str(currently.month)
     year = str(currently.year)
-    current_date = today + "/" + month + "/" + year
+    current_date = datetime.datetime.strptime(today + "/" + month + "/" + year, "%d/%m/%Y").date()
 
     return render_template("bookings.html",
                            current_date=current_date,
-                           bookings=bookings,
+                           new_bookings_list=new_bookings_list,
                            today=today,
                            month=month,
                            year=year)
+
+
+# LOGOUT ROUTE
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
 
                            
 __init_db(DB_FILE_PATH)

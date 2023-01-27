@@ -76,9 +76,24 @@ body {
   transition: all 0.25s ease-in-out 0s;
 }
 
+.current-user {
+  float: left;
+}
+
+.welcome {
+  color: #DD6D4F;
+  font-weight: 100;
+  font-size: smaller;
+  margin: 1rem auto;
+  width: 80%;
+}
+
 .intro {
   line-height: 1.5rem;
-  margin: 2rem auto;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  margin-right: auto;
+  margin-left: auto;
   width: 80%;
 }
 
@@ -315,7 +330,7 @@ h2, h3 {
   display: none;
 }
 
-.month, .year, .welcome {
+.month, .year {
   display: inline;
   margin: 0;
   padding: 0;

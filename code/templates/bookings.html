@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block main %}
+ {{ bookings }}
+ {{ current_date }}
   <table class="bookings">
     <thead>
       <tr>
@@ -15,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for item in bookings %}
+      {% for item in new_bookings_list %}
       <tr class="row">
         <td class="booking-content">{{ item[0] }}</td>
         <td class="booking-content">{{ item[2] }}</td>
@@ -41,6 +43,5 @@
     </tbody>
   </table>
 
-  <a class="navLink filled" href="/dates/page">Make a booking</a>
 {% endblock %}
 

@@ -4,12 +4,10 @@
 {% endblock %}
 
 {% block main %}
-
+  
   <section class="landing-container">
     <h1 class="bookit">BookIt</h1>
-    {% if session["user_id"] %}
-      <h3 class="welcome">Welcome {{ user[0] }} !</h3>
-    {% endif %}
+
     <div class="start-image">
       <img class="rooftop" src="static/rooftop.jpg" alt="rooftop"/>
     </div>

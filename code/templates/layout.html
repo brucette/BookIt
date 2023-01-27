@@ -24,6 +24,11 @@
     <div class="nav-toggle">
       <span class="navIcon close hidden">X</span>
     </div>
+    <div class="current-user">
+      {% if session["user_id"] %}
+      <h4 class="welcome">Welcome {{ session["user_name"] }}!</h4>
+    {% endif %}
+    </div>
 
     <p class="intro">
       Bookit is a booking system for the use of 
