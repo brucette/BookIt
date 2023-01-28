@@ -1,4 +1,5 @@
 /* Blue : 1D4C82 orange: DD6D4F Grey: #DAE1E7 */
+
 body {
   font-family: Montserrat;
   margin: 0;
@@ -132,7 +133,6 @@ body {
 /** Sign In page **/
 
 .sign-in-form, .confirmation-form {
-  border: 2px solid blue;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -173,7 +173,6 @@ a {
 }
 
 .cal-btn {
-  /* padding: 1rem 0; */
   width: 14%;
   height: 3rem;
   text-align: center;
@@ -189,7 +188,6 @@ a {
 .bookingLink, .deactiveLink {
   padding: 20% 24%;
   width: 8%;
-  /* height: 2rem; */
   background-color: white;
   color: #1D4C82;
   margin: 2px;
@@ -372,15 +370,34 @@ th {
   }
 }
 
+.form-wrap {
+  width: 70%;
+  display: flex;
+  padding: 0.5rem;
+}
+
+.selectBookingsForm {
+  width: 50%;
+}
+
+.selectBookingsBtn {
+  width: 98%;
+  background-color: transparent;
+  border: 1px solid rgb(3, 130, 152);
+  border-radius: 3px;
+  padding: 0.6rem;
+  font-size: 1rem;
+  color: #555;
+  font-family: Montserrat;
+}
+
 .bookings {
   width: 70%;
-  /* display: flex;
-  flex-direction: column; */
   border: 2px solid #eee;
   border-radius: 8px;
   padding: 1rem;
   margin: 1rem 0;
-  box-shadow:  4px 4px 4px #777;
+  box-shadow:  4px 4px 4px rgb(3, 130, 152); /* #777; */
 }
 
 .date-and-status {
@@ -396,6 +413,7 @@ th {
 
 .by {
   margin-bottom: 1rem;
+  color: rgb(3, 130, 152);
 }
 
 .instructions {
@@ -607,8 +625,13 @@ th {
     resize: none;
   }
 
-  .bookings {
+  .bookings, .form-wrap  {
     width: 60%;
+  }
+
+  .selectBookingsBtn:hover {
+    background-color: #eee;
+    cursor: pointer;
   }
 }
 

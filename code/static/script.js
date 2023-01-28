@@ -35,7 +35,6 @@ if (year) {
 let bookingLinks = document.querySelectorAll(".bookingLink")
 let times = document.querySelectorAll(".timeslot")
 let cancelButtons = document.querySelectorAll(".cancel")
-const nextButton = document.querySelector(".next")
 
 // Add event listener to all days on the calendar view
 bookingLinks.forEach((bookingLink) => {
@@ -54,15 +53,6 @@ times.forEach((time) => {
   })
 })
 
-// Event listener for cancel button for a booking
-// cancelButtons.forEach((button) => {
-//   button.addEventListener("click", function() {
-//     localStorage.setItem("canceledBooking", button.id);
-//     window.alert("OK!")
-//     console.log("month")
-//   })
-// })
-
 // Event listener to back button going to the calendar view, for if user goes back to pick a different day
 let backToCal = document.getElementById("backToCal")
 if (backToCal) {
@@ -79,13 +69,13 @@ if (backToDay) {
   })
 }
 
-let confirmedDay = localStorage.getItem("selectedDate") //parseInt()
+let confirmedDay = localStorage.getItem("selectedDate") 
 console.log('typeof confirmedDay:', typeof confirmedDay, confirmedDay)
 
 let confirmedMonth = localStorage.getItem("month")
 // console.log('month is:', confirmedMonth)
 
-let confirmedYear = localStorage.getItem("year") //parseInt()
+let confirmedYear = localStorage.getItem("year")
 // console.log('typeof confirmedYear:', typeof confirmedYear)
 
 let confirmedTime = localStorage.getItem("selectedTime")
@@ -108,8 +98,6 @@ if (confirmDay) {
   confirmDay.value = confirmedDay + '/' + (monthNumber+1).toString() + '/' + confirmedYear
 }
 
-// document.getElementById("selectedDate").value = confirmedDay + '/' + (monthNumber+1).toString() + '/' + confirmedYear
-// document.getElementById("confirmDay").value = confirmedDay + '/' + (monthNumber+1).toString() + '/' + confirmedYear
 document.getElementById("confirmTime").value = confirmedTime
 
 

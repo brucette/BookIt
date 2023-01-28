@@ -67,7 +67,6 @@ def __init_db(database_path):
 
 
 @app.route("/")
-# @login_required
 def index():
     """Renders landing page of the booking system"""
     return render_template("index.html")
@@ -94,7 +93,7 @@ def register():
     if not email:
         return apology("must provide email")
 
-    # # Ensure password was submitted
+    # Ensure password was submitted
     if not password:
         return apology("must provide password")
 
@@ -102,15 +101,15 @@ def register():
     if not verify_password or password != verify_password:
         return apology("password must match verification")
 
-    # # Ensure first name was submitted
+    # Ensure first name was submitted
     if not first_name:
         return apology("must provide first name")
 
-    # # Ensure last name was submitted
+    # Ensure last name was submitted
     if not last_name:
         return apology("must provide last name")
 
-    # # Ensure apartment number was submitted
+    # Ensure apartment number was submitted
     if not apartment:
         return apology("must provide apartment number")
 
@@ -258,29 +257,22 @@ def dayview():
     # Convert selected date into a datetime date to make comparing and sorting possible
     comp_date = datetime.datetime.strptime(selected_date, "%d/%m/%Y").date()
 
-    # Get today's date and 
-    # todays_date = str(today) + '/' + str(current_month_number) + '/' + str(current_year)
-    
-    # Get current time
-    # t = time.localtime()
-    # current_time = time.strftime("%H:%M", t)
+    # Get today's date and the current time
+    todays_date = str(today) + '/' + str(current_month_number) + '/' + str(current_year)
+    t = time.localtime()
+    current_time = time.strftime("%H:%M", t)
 
     # Get all made bookings from this point onwards
     db_connection = get_db()
-    #query = f'SELECT * FROM user_bookings WHERE booking_date>="{todays_date}"'
     query = f'SELECT * FROM user_bookings'
     result = db_connection.execute(query)
     bookings = result.fetchall()
-
-    # Commit the command
     db_connection.commit()
-
-    # Close the connection
     db_connection.close()
 
-    new_bookings_list = []
-
     # Replace dates in booking with a datetime date to make sorting possible
+    new_bookings_list = []
+    
     for item in bookings:
         temp = list(item)
         new_bookings_list.append(temp)
@@ -296,10 +288,15 @@ def dayview():
             if item[5] == comp_date and item[4] == timeslot:
                 timeslot_taken.append([timeslot, True])
                 break
+            elif selected_date == todays_date and current_time > timeslot:
+                timeslot_taken.append([timeslot, True])
+                break
         else:
             timeslot_taken.append([timeslot, False])
 
     return render_template("dayview.html", 
+                            todays_date=todays_date,
+                            current_time=current_time,
                             selected_date=selected_date,
                             bookings=bookings,
                             timeslot_taken=timeslot_taken)
@@ -355,20 +352,7 @@ def confirmed():
 
 @app.route('/userpage', methods=["GET", "POST"])
 def userpage():
-    """ Show a users bookings """
-
-    if request.method == "POST":
-        selected_row = request.form.get("selectedRow")
-
-        db_connection = get_db()
-        query = f'DELETE FROM user_bookings WHERE id="{selected_row}"'
-        db_connection.execute(query)
-
-        # Commit the command
-        db_connection.commit()
-
-        # Close the connection
-        db_connection.close()
+    """ Show bookings """
 
     db_connection = get_db()
 
@@ -377,16 +361,16 @@ def userpage():
     result1 = db_connection.execute(query1)
     identifiers = result1.fetchall()
     email = identifiers[0][0]
-    first_name = identifiers[0][1]
-    apartment = identifiers[0][2]
+    # first_name = identifiers[0][1]
+    # apartment = identifiers[0][2]
 
     # Get users bookings
-    query2 = f'SELECT * FROM user_bookings WHERE email="{email}"'
-    result2 = db_connection.execute(query2)
-    bookings = result2.fetchall()
+    # query2 = f'SELECT * FROM user_bookings WHERE email="{email}"'
+    # result2 = db_connection.execute(query2)
+    # bookings = result2.fetchall()
 
     # Get all users' bookings 
-    query3 = f'SELECT * FROM user_bookings"'
+    query3 = f'SELECT * FROM user_bookings'
     result3 = db_connection.execute(query3)
     all_bookings = result3.fetchall()
 
@@ -398,15 +382,20 @@ def userpage():
 
     new_bookings_list = []
 
-    # Replace dates in booking with a datetime date to make sorting possible
-    for item in bookings:
+    # Change tuples into lists to allow re-assignment of dates to datetime dates
+    for item in all_bookings:
         temp = list(item)
         new_bookings_list.append(temp)
 
+    # Replace dates in all_bookings with a datetime date to make sorting possible
     for item in new_bookings_list:
         item[5] = datetime.datetime.strptime(item[5], "%d/%m/%Y").date()
-
+    
+    # Sort all bookings by date
     new_bookings_list.sort(key=itemgetter(5))
+
+    # Filter the new_bookings_list to only include current user's bookings 
+    user_bookings = [x for x in new_bookings_list if x[1] == email]
 
     currently = datetime.date.today()
     today = str(currently.day)
@@ -414,15 +403,36 @@ def userpage():
     year = str(currently.year)
     current_date = datetime.datetime.strptime(today + "/" + month + "/" + year, "%d/%m/%Y").date()
 
+    show = new_bookings_list
+
+    if request.method == "POST":
+        selected_row = request.form.get("selectedRow")
+
+        select_bookings = request.form.get("select_bookings")
+
+        if selected_row != None:
+            db_connection = get_db()
+            query = f'DELETE FROM user_bookings WHERE id="{selected_row}"'
+            db_connection.execute(query)
+
+            # Commit the command
+            db_connection.commit()
+
+            # Close the connection
+            db_connection.close()
+
+            db_connection = get_db()
+        
+        if select_bookings != None:
+            if select_bookings == "All bookings":
+                show = new_bookings_list
+            else:
+                show = user_bookings
+
     return render_template("bookings.html",
-                           identifiers=identifiers,
-                           first_name=first_name,
-                           apartment=apartment,
+                           show=show,
                            current_date=current_date,
-                           new_bookings_list=new_bookings_list,
-                           today=today,
-                           month=month,
-                           year=year)
+                           today=today)
 
 
 # LOGOUT ROUTE
