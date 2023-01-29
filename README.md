@@ -27,19 +27,19 @@ bookings that are made.
 The templates-folder contains the **HTML** files that are rendered with the help of
 **Jinja templating laguage** once the user accesses the different routes of the app:
  
- - _ _layout.html_ _ - contains the nav bar and the skeleton of the website, contains the placeholders 
+ -  _layout.html_ - contains the nav bar and the skeleton of the website, contains the placeholders 
  (block title and block main) for information from the other html files to rendered into, and displayed on the browser. 
  E.g. the block title "Bookings" and the block main which is the list of all the bookings in the database, are rendered via the layout file when the user goes to the /userpage path of the website.
- - _ _index_ _ - landing page
- - _ _register_ _ - displays a form for registering
- - _ _login_ _ - displays a form for registering
- - _ _apology_ _ - rendered when user forgets to include any form item in register or loging form
- - _ _bookings_ _ - lists all bookings with a button to select only logged in user's bookings
- - _ _calendar_ _ - displays all days for current month with buttons to move to the next two months
- - _ _dayview_ _ - displays all 3 timeslots available per day, available timeslot is an active, clickable button and an unavailable one is a deactive, unclickable button. 
- - _ _middle_ _ - a page that is briefly rendered, to allow time for the date user has selected and to post it to the backend to retrieve and show available timeslots for that day. 
- - _ _confirm_ _ - displays the selected date and time of the booking user has chosen with a button to confirm their choice
- - _ _confirmed_ _ - displays a checkmark to user indicating booking has been made
+ -  _index_ - landing page
+ -  _register_ - displays a form for registering
+ -  _login_ - displays a form for registering
+ -  _apology_ - rendered when user forgets to include any form item in register or loging form
+ -  _bookings_ - lists all bookings with a button to select only logged in user's bookings
+ -  _calendar_ - displays all days for current month with buttons to move to the next two months
+ -  _dayview_ - displays all 3 timeslots available per day, available timeslot is an active, clickable button and an unavailable one is a deactive, unclickable button. 
+ -  _middle_ - a page that is briefly rendered, to allow time for the date user has selected and to post it to the backend to retrieve and show available timeslots for that day. 
+ -  _confirm_ - displays the selected date and time of the booking user has chosen with a button to confirm their choice
+ -  _confirmed_ - displays a checkmark to user indicating booking has been made
 
  
 **Javascript** is used in _ _script.js_ _ to add interactivity, mainly event listeners to various buttons throughout the site, which is styled and made to be responsive on different screen sizes using **CSS**. 
