@@ -2,10 +2,9 @@
 #### Video Demo:  <URL HERE>
 #### Description:
 
-BookIt is a a web-based application that residents of an apartment complex can use to 
-book a timeslot to hold social events in their communal area .
+BookIt is a booking system that can be used to book timeslots, e.g. for the use of a communal area of an apartment complex to hold social events.
 
-Users of the app can register for an account or login, view available times (curently only
+Users of the app can create an account or login, view available times (curently only
 for the following 3 months), make a booking, view their own bookings or all the bookings 
 in the system, and cancel any of their upcoming bookings.
 
@@ -14,15 +13,9 @@ this purpose in the apartment building I live in, and thought it might be more c
 to be able to see the available times without having to go to the location each time one 
 wanted to use the communal area. 
 
-Micro web-framework **Flask**  is used to build the 
-project. 
+BookIt is built in **Flask**, which is a **Python** based web framework. 
 
-**Python** is used in _app.py_ to configure the application, connect it to a **Sqlite3** database 
-file, create all the needed tables (users and user_bookings) upon initialization and to define the 
-different routes accessible by the application. 
-
-Sqlite3 is used as the database to store user data upon registering and for storing all the 
-bookings that are made.
+_App.py_ is the main application that contains the different endpoints/routes and the logic for them. If there is no previously existing database when the application first starts, a database is created. **Sqlite3** is used as the dtatabse to store user data upon registering and for storing all the bookings that are made.
 
 The templates-folder contains the **HTML** files that are rendered with the help of
 **Jinja templating laguage** once the user accesses the different routes of the app:
@@ -33,11 +26,11 @@ The templates-folder contains the **HTML** files that are rendered with the help
  -  _index_ - landing page
  -  _register_ - displays a form for registering
  -  _login_ - displays a form for registering
- -  _apology_ - rendered when user forgets to include any form item in register or loging form
+ -  _apology_ - rendered when user forgets to include any form item in register or login form
  -  _bookings_ - lists all bookings with a button to select only logged in user's bookings
  -  _calendar_ - displays all days for current month with buttons to move to the next two months
  -  _dayview_ - displays all 3 timeslots available per day, available timeslot is an active, clickable button and an unavailable one is a deactive, unclickable button. 
- -  _middle_ - a page that is briefly rendered, to allow time for the date user has selected and to post it to the backend to retrieve and show available timeslots for that day. 
+ -  _middle_ - a page that is briefly rendered, to allow time for the date user has selected to be stored and then posted to the backend to retrieve and show available timeslots for that day. 
  -  _confirm_ - displays the selected date and time of the booking user has chosen with a button to confirm their choice
  -  _confirmed_ - displays a checkmark to user indicating booking has been made
 
