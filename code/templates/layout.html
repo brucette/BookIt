@@ -13,7 +13,7 @@
   <link type="image/png" sizes="16x16" rel="icon" href="/static/icons8-calendar-16.png">
   <title>BookIt</title>
 </head>
-<body>
+<body class="body">
   <div class="nav-toggle">
     <span class="navIcon hamburger"></span>
     <span class="navIcon hamburger"></span>
@@ -23,16 +23,16 @@
     <div class="nav-toggle">
       <span class="navIcon close hidden">X</span>
     </div>
+    <span class="logo">BookIt</span>
     <div class="current-user">
       {% if session["user_id"] %}
-      <h4 class="welcome">Welcome {{ session["user_name"] }}!</h4>
-    {% endif %}
+        <h4 class="welcome">Welcome {{ session["user_name"] }}!</h4>
+      {% endif %}
     </div>
 
     <p class="intro">
-      Bookit is a booking system for the use of 
-      our communal area for any festive occasions. 
-      Here you can..
+      BookIt is where you can book 
+      our communal area for any festive occasions, big or small. 
     </p>
 
     <section class="navigate">

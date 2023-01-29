@@ -2,11 +2,13 @@ const navToggle = document.querySelectorAll(".nav-toggle");
 const sidebar = document.querySelector(".sidebar");
 const navIcon = document.querySelectorAll(".navIcon");
 const hamburger = document.querySelector("#hamburger");
+const body = document.querySelector(".body");
 
 // Shows mobile and tablet navigation menu
 navToggle.forEach(item => {
   item.addEventListener("click", () => {
     sidebar.classList.toggle("open");
+    body.classList.toggle("back-color")
     navIcon.forEach(icon => {
         icon.classList.toggle("hidden");
     })
@@ -41,7 +43,6 @@ bookingLinks.forEach((bookingLink) => {
   bookingLink.addEventListener("click",  function() {
     localStorage.setItem("selectedDate", bookingLink.innerHTML);
     setTimeout(document.location.href = 'http://localhost:8989/middle', 5000); 
-    console.log('selected:', localStorage.getItem("selectedDate"));
   })
 })
 
@@ -49,7 +50,6 @@ bookingLinks.forEach((bookingLink) => {
 times.forEach((time) => {
   time.addEventListener("click",  function() {
     localStorage.setItem("selectedTime", time.innerHTML);
-    console.log('selected:', localStorage.getItem("selectedTime"));
   })
 })
 
@@ -70,14 +70,8 @@ if (backToDay) {
 }
 
 let confirmedDay = localStorage.getItem("selectedDate") 
-console.log('typeof confirmedDay:', typeof confirmedDay, confirmedDay)
-
 let confirmedMonth = localStorage.getItem("month")
-// console.log('month is:', confirmedMonth)
-
 let confirmedYear = localStorage.getItem("year")
-// console.log('typeof confirmedYear:', typeof confirmedYear)
-
 let confirmedTime = localStorage.getItem("selectedTime")
 
 function getMonthNumberFromName(monthName) {
@@ -85,7 +79,6 @@ function getMonthNumberFromName(monthName) {
 }
 
 let monthNumber = getMonthNumberFromName(confirmedMonth)
-// console.log('monthNUM is:', monthNumber)
 
 let selectedDay = document.getElementById("selectedDay");
 if (selectedDay) {

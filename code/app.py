@@ -357,17 +357,10 @@ def userpage():
     db_connection = get_db()
 
     # Get users email, name and apartment number
-    query1 = f'SELECT email, first_name, apartment FROM users WHERE id="{session["user_id"]}"'
+    query1 = f'SELECT email FROM users WHERE id="{session["user_id"]}"'
     result1 = db_connection.execute(query1)
     identifiers = result1.fetchall()
     email = identifiers[0][0]
-    # first_name = identifiers[0][1]
-    # apartment = identifiers[0][2]
-
-    # Get users bookings
-    # query2 = f'SELECT * FROM user_bookings WHERE email="{email}"'
-    # result2 = db_connection.execute(query2)
-    # bookings = result2.fetchall()
 
     # Get all users' bookings 
     query3 = f'SELECT * FROM user_bookings'
@@ -392,7 +385,7 @@ def userpage():
         item[5] = datetime.datetime.strptime(item[5], "%d/%m/%Y").date()
     
     # Sort all bookings by date
-    new_bookings_list.sort(key=itemgetter(5))
+    new_bookings_list.sort(key=itemgetter(5, 4))
 
     # Filter the new_bookings_list to only include current user's bookings 
     user_bookings = [x for x in new_bookings_list if x[1] == email]
@@ -414,14 +407,8 @@ def userpage():
             db_connection = get_db()
             query = f'DELETE FROM user_bookings WHERE id="{selected_row}"'
             db_connection.execute(query)
-
-            # Commit the command
             db_connection.commit()
-
-            # Close the connection
             db_connection.close()
-
-            db_connection = get_db()
         
         if select_bookings != None:
             if select_bookings == "All bookings":

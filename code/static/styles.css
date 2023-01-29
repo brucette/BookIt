@@ -12,8 +12,7 @@ body {
   font-size: 2rem;
   margin: 0;
   padding: 0.6rem;
-  /* font-family: Monoton, cursive;
-  font-family: wox-striped_triple_demoRg; */
+  /* font-family: wox-striped_triple_demoRg; */
   font-family: Amita, cursive;
   font-weight: 400;
   color: #DD6D4F;
@@ -37,7 +36,16 @@ body {
 
 .nav-toggle {
   margin: 0;
-  padding: 0;
+  padding: 0.5rem;
+}
+
+.first {
+  background-color: white;
+  border: 2px solid;
+}
+
+.back-color {
+  background-color: #1D4C82;
 }
 
 .hamburger {
@@ -47,6 +55,16 @@ body {
   margin: 8px 16px;
   background: #DD6D4F;
   border-radius: 3px;
+}
+
+.logo {
+  width: 80%;
+  padding: 0.5rem 1rem;
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  font-family: Amita;
+  color: #DD6D4F;
 }
 
 .hidden {
@@ -63,8 +81,8 @@ body {
 
 .open {
   margin: 0;
-  padding: 0.5rem 1rem; 
-  height: 100vh;
+  /* padding: 0.5rem 1rem;  */
+  height: 110vh;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -74,10 +92,13 @@ body {
 }
 
 .welcome {
-  color: #DD6D4F;
+  /* color: #DD6D4F; */
   font-weight: 100;
-  font-size: smaller;
-  margin: 1rem auto;
+  /* font-size: smaller; */
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  margin-left: auto;
+  margin-right: auto;
   width: 80%;
 }
 
@@ -115,13 +136,13 @@ body {
 }
 
 .close {
+  padding: 1rem 1rem;
   font-weight: bold;
   font-size: x-large;
   color: #DD6D4F;
 }
 
 .container {
-  /* border: 2px solid green; */
   width: 95%;
   display: flex;
   flex-direction: column;
@@ -438,20 +459,6 @@ th {
   padding: 0.4rem;
 }
 
-.booking-header {
-  width: 28%;
-  padding: 3% 0;
-  font-size: 0.8rem;
-}
-
-.first {
-  width: 17%;
-}
-
-.booking-content {
-  font-size: 1rem;
-}
-
 .completed {
   color: #7ac142;
 }
@@ -533,6 +540,10 @@ th {
     display: none;
   }
 
+  .back-color {
+    background-color: white;
+  }
+
   .sidebar {
     display: flex;
     flex-direction: column;
@@ -563,12 +574,12 @@ th {
   }
 
   .cal-btn {
-    height: 4.5rem;
+    height: 4.9rem;
   } 
 
   .bookingLink, .deactiveLink {
-    padding: 25% 33%;
-    width: 8%;
+    padding: 27% 37%;
+    width: 10%;
     margin: 3px;
   }
 

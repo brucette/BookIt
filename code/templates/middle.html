@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+  <form action="/dayview" method="post" id="selected-date-form" name="selected-date-form">
+    <input hidden id="done" name="done" value=""/>
+    <input readonly id="selectedDay" name="selectedDay" value="" class="selected"/>
+  </form>
+
+  <script type="text/javascript">
+      
+    // Wait until DOM is fully loaded before automatically submitting the form
+    setTimeout(document.addEventListener("DOMContentLoaded", function(event) {
+            document.createElement('form').submit.call(document.getElementById('selected-date-form'));
+            }), 5000);      
+  </script>
+
+{% endblock %}
