@@ -42,7 +42,7 @@ let cancelButtons = document.querySelectorAll(".cancel")
 bookingLinks.forEach((bookingLink) => {
   bookingLink.addEventListener("click",  function() {
     localStorage.setItem("selectedDate", bookingLink.innerHTML);
-    setTimeout(document.location.href = 'http://localhost:8989/middle', 5000); 
+    document.location.href = 'http://localhost:8989/middle'; 
   })
 })
 
@@ -83,7 +83,6 @@ let monthNumber = getMonthNumberFromName(confirmedMonth)
 let selectedDay = document.getElementById("selectedDay");
 if (selectedDay) {
   selectedDay.value = confirmedDay + '/' + (monthNumber+1).toString() + '/' + confirmedYear
-  console.log('typ:', selectedDay.value)
 }
 
 let confirmDay = document.getElementById("confirmDay");

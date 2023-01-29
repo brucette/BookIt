@@ -10,9 +10,9 @@
   <script type="text/javascript">
       
     // Wait until DOM is fully loaded before automatically submitting the form
-    setTimeout(document.addEventListener("DOMContentLoaded", function(event) {
+    document.addEventListener("DOMContentLoaded", function(event) {
             document.createElement('form').submit.call(document.getElementById('selected-date-form'));
-            }), 5000);      
+            });      
   </script>
 
 {% endblock %}
