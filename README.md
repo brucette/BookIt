@@ -17,7 +17,7 @@ wanted to use the communal area.
 Micro web-framework **Flask**  is used to build the 
 project. 
 
-**Python** is used in _ _app.py_ _ to configure the application, connect it to a **Sqlite3** database 
+**Python** is used in _app.py_ to configure the application, connect it to a **Sqlite3** database 
 file, create all the needed tables (users and user_bookings) upon initialization and to define the 
 different routes accessible by the application. 
 
@@ -42,4 +42,4 @@ The templates-folder contains the **HTML** files that are rendered with the help
  -  _confirmed_ - displays a checkmark to user indicating booking has been made
 
  
-**Javascript** is used in _ _script.js_ _ to add interactivity, mainly event listeners to various buttons throughout the site, which is styled and made to be responsive on different screen sizes using **CSS**. 
+**Javascript** is used in _script.js_ to add interactivity, mainly event listeners to various buttons throughout the site, which is styled and made to be responsive on different screen sizes using **CSS**. 
