@@ -1,5 +1,5 @@
 # BookIt
-#### Video Demo:  <URL HERE>
+#### Video Demo:  https://www.youtube.com/watch?v=_Y-PANaLhqk
 #### Description:
 
 BookIt is a booking system that can be used to book timeslots, e.g. for the use of a communal area of an apartment complex to hold social events.

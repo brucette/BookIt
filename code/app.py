@@ -385,7 +385,8 @@ def userpage():
     
     # Sort all bookings by date
     new_bookings_list.sort(key=itemgetter(5, 4))
-
+    new_bookings_list.reverse()
+    
     # Filter the new_bookings_list to only include current user's bookings 
     user_bookings = [x for x in new_bookings_list if x[1] == email]
 
