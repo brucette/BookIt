@@ -1,1 +1,5 @@
 .DS*
+.db
+.__wz_cache
+.pyc
+flask_session
