@@ -46,15 +46,15 @@ def __init_db(database_path):
             email TEXT NOT NULL,\
             hash TEXT NOT NULL,\
             first_name TEXT NOT NULL,\
-            last_name TEXT NOT NULL, \
+            last_name TEXT NOT NULL,\
             apartment INT NOT NULL)"
 
     bookings_table = "CREATE TABLE user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,\
-            email TEXT NOT NULL, \
+            email TEXT NOT NULL,\
             first_name TEXT NOT NULL,\
-            apartment INT NOT NULL),\
-            booking_time TEXT NOT NULL, \
-            booking_date TEXT NOT NULL), \
+            apartment INT NOT NULL,\
+            booking_time TEXT NOT NULL,\
+            booking_date TEXT NOT NULL,\
             notes TEXT)"
 
     cursor.execute(users_table)
