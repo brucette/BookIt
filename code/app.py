@@ -25,10 +25,6 @@ DB_FILE_PATH = '/code/database.db'
 
 # Global variables
 timeslots = ["10:30 - 13:30", "14:00 - 17:30", "18:30 - 23:00"]
-currently = datetime.date.today()
-current_year = currently.year
-today = currently.day
-current_month_number = currently.month
 
 def get_db():
     """ Returns a sqlite3 db session"""
@@ -204,6 +200,11 @@ def welcome():
 @login_required
 def dates(page):
     """ Shows calendar"""
+
+    currently = datetime.date.today()
+    current_year = currently.year
+    today = currently.day
+    current_month_number = currently.month
 
     monthName = currently.strftime("%B")
     next_month_number = 0
