@@ -257,6 +257,11 @@ def dayview():
     # Convert selected date into a datetime date to make comparing and sorting possible
     comp_date = datetime.datetime.strptime(selected_date, "%d/%m/%Y").date()
 
+    currently = datetime.date.today()
+    today = currently.day
+    current_month_number = currently.month
+    current_year = currently.year
+
     # Get today's date and the current time
     todays_date = str(today) + '/' + str(current_month_number) + '/' + str(current_year)
     t = time.localtime()
