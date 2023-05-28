@@ -4,17 +4,17 @@ jobs:
 publish-bookit-docker-image:
 runs-on: python
 steps:
-- uses: actions/checkout@v2
+- uses: actions/checkout@v3
   with:
     fetch-depth: 0
 - name: Login to Github Container Registry
 
-uses: docker/login-action@v1
+uses: docker/login-action@v2
 with:
-registry: ghcr.io
-username: ${{ github.actor }}
-password: ${{ secrets.CONTAINER_TOKEN }}
+  registry: ghcr.io
+  username: ${{ github.actor }}
+  password: ${{ secrets.CONTAINER_TOKEN }}
 - name: Build the bookit-docker-image
-run:
+run: |
     docker build -t ghcr.io/brucette/bookit:latest .
     docker push ghcr.io/brucette/bookit 
