@@ -4,7 +4,7 @@ jobs:
 publish-bookit-docker-image:
 runs-on: python
 steps:
-- uses: actions/chekout@v2
+- uses: actions/checkout@v2
  with:
     fetch-depth: 0
 - name: Login to Github Container Registry
