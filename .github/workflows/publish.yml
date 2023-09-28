@@ -2,6 +2,15 @@
 name: publish
 on: [push, workflow_dispatch]
 jobs:
+  pylint:
+    runs-on: python
+    steps:
+      - name: Install pylint
+        run: pip install pylint
+
+      - name: Run pylint
+        run: cd code && pylint app.py helpers.py
+
   publish-bookit-docker-image:
     runs-on: python
     steps:
