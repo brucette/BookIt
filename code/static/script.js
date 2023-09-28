@@ -42,7 +42,7 @@ let cancelButtons = document.querySelectorAll(".cancel")
 bookingLinks.forEach((bookingLink) => {
   bookingLink.addEventListener("click",  function() {
     localStorage.setItem("selectedDate", bookingLink.innerHTML);
-    document.location.href = 'http://localhost:8989/middle'; 
+    document.location.href = 'http://localhost:8989/middle';     // CHANGE THIS LATER!!
   })
 })
 

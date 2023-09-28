@@ -6,8 +6,8 @@ import time
 from operator import itemgetter
 from os.path import exists
 from flask import Flask, redirect, render_template, session, request
-from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask_session import Session
 from helpers import apology, login_required
 
 # Configure application
@@ -31,10 +31,10 @@ def get_db():
     return sqlite3.connect(DB_FILE_PATH)
 
 
-def __init_db(database_path):                                      
-    """Create database schema if application is started for the first time""" 
-    if exists(database_path):                                      
-        return   
+def __init_db(database_path):
+    """Create database schema if application is started for the first time"""
+    if exists(database_path):
+        return
 
     db_connection = get_db()
     cursor = db_connection.cursor()
@@ -128,7 +128,7 @@ def register():
 
         # Close the connection
         db_connection.close()
-    except ValueError:
+    except:
         db_connection.close()
         return apology("email is already registered")
     else:
@@ -206,7 +206,7 @@ def dates(page):
     today = currently.day
     current_month_number = currently.month
 
-    monthName = currently.strftime("%B")
+    month_name = currently.strftime("%B")
     next_month_number = 0
     third_month_number = 0
     year = current_year
@@ -220,23 +220,23 @@ def dates(page):
     elif current_month_number == 12:
         next_month_number = 1
         third_month_number =  next_month_number + 1
-    
+
     month1 = calendar.monthcalendar(year, current_month_number)
     month2 = calendar.monthcalendar(year, next_month_number)
     month3 = calendar.monthcalendar(year, third_month_number)
     month = month1
- 
+
     if page == 2:
-      month=month2
-      monthName = calendar.month_name[next_month_number]
+        month=month2
+        month_name = calendar.month_name[next_month_number]
     elif page == 3:
-      month=month3
-      monthName = calendar.month_name[third_month_number]
+        month=month3
+        month_name = calendar.month_name[third_month_number]
 
     return render_template("calendar.html",
                            page=page,
                            today=today,
-                           monthName=monthName,
+                           month_name=month_name,
                            year=year,
                            month=month,
                            current_month_number=current_month_number)
@@ -277,7 +277,7 @@ def dayview():
 
     # Replace dates in booking with a datetime date to make sorting possible
     new_bookings_list = []
-    
+
     for item in bookings:
         temp = list(item)
         new_bookings_list.append(temp)
@@ -288,6 +288,7 @@ def dayview():
     # Empty list for adding timeslot types
     timeslot_taken = []
 
+    # Check whether date and time already taken
     for timeslot in timeslots:
         for item in new_bookings_list:
             if item[5] == comp_date and item[4] == timeslot:
@@ -299,7 +300,7 @@ def dayview():
         else:
             timeslot_taken.append([timeslot, False])
 
-    return render_template("dayview.html", 
+    return render_template("dayview.html",
                             todays_date=todays_date,
                             current_time=current_time,
                             selected_date=selected_date,
@@ -332,7 +333,13 @@ def confirm():
     # Insert the new booking into the bookings table
     cursor_obj3 = db_connection.cursor()
     query3 = f'INSERT INTO user_bookings (email, \
-            first_name, apartment, booking_time, booking_date, notes) VALUES ("{email}", "{first_name}", "{apartment}", "{booking_time}", "{booking_date}", "{notes}")'
+            first_name, apartment, booking_time, booking_date, notes) \
+            VALUES ("{email}", \
+                    "{first_name}", \
+                    "{apartment}", \
+                    "{booking_time}", \
+                    "{booking_date}", \
+                    "{notes}")'
     cursor_obj3.execute(query3)
 
     # Commit the command
@@ -367,7 +374,7 @@ def userpage():
     identifiers = result1.fetchall()
     email = identifiers[0][0]
 
-    # Get all users' bookings 
+    # Get all users' bookings
     query3 = f'SELECT * FROM user_bookings'
     result3 = db_connection.execute(query3)
     all_bookings = result3.fetchall()
@@ -388,12 +395,12 @@ def userpage():
     # Replace dates in all_bookings with a datetime date to make sorting possible
     for item in new_bookings_list:
         item[5] = datetime.datetime.strptime(item[5], "%d/%m/%Y").date()
-    
+
     # Sort all bookings by date
     new_bookings_list.sort(key=itemgetter(5, 4))
     new_bookings_list.reverse()
-    
-    # Filter the new_bookings_list to only include current user's bookings 
+
+    # Filter the new_bookings_list to only include current user's bookings
     user_bookings = [x for x in new_bookings_list if x[1] == email]
 
     currently = datetime.date.today()
@@ -409,14 +416,14 @@ def userpage():
 
         select_bookings = request.form.get("select_bookings")
 
-        if selected_row != None:
+        if selected_row is not None:
             db_connection = get_db()
             query = f'DELETE FROM user_bookings WHERE id="{selected_row}"'
             db_connection.execute(query)
             db_connection.commit()
             db_connection.close()
-        
-        if select_bookings != None:
+
+        if select_bookings is not None:
             if select_bookings == "All bookings":
                 show = new_bookings_list
             else:
@@ -439,8 +446,10 @@ def logout():
     # Redirect user to login form
     return redirect("/")
 
-                           
+
 __init_db(DB_FILE_PATH)
 app.run(host='0.0.0.0')
 
-# CREATE TABLE user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL, first_name TEXT NOT NULL, apartment INT NOT NULL, booking_time TEXT NOT NULL, booking_date TEXT NOT NULL, notes TEXT);
+# CREATE TABLE user_bookings (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email TEXT NOT NULL,
+# first_name TEXT NOT NULL, apartment INT NOT NULL, booking_time TEXT NOT NULL,
+# booking_date TEXT NOT NULL, notes TEXT);
