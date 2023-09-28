@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install pylint
-        run: apt-get update && apt-get install --yes --no-install-recommends pylint
+        run: sudo apt-get update && sudo apt-get install --yes --no-install-recommends pylint
 
       - name: Run pylint
         run: cd code && pylint app.py helpers.py
