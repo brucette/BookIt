@@ -5,6 +5,11 @@ jobs:
   pylint:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
       - name: Install pylint
         run: sudo apt-get update && sudo apt-get install --yes --no-install-recommends pylint
 
@@ -14,7 +19,7 @@ jobs:
   publish-bookit-docker-image:
     runs-on: ubuntu-latest
     steps:
-      - name: Login to Github Container Registry
+      - name: Checkout Repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
