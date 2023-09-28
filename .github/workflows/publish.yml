@@ -9,7 +9,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          
+
       - name: Install pylint
         run: sudo apt-get update && sudo apt-get install --yes --no-install-recommends pylint
 
@@ -17,6 +17,7 @@ jobs:
         run: cd code && pylint app.py helpers.py
 
   publish-bookit-docker-image:
+    needs: pylint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
