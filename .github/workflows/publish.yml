@@ -3,16 +3,16 @@ name: publish
 on: [push, workflow_dispatch]
 jobs:
   pylint:
-    runs-on: python
+    runs-on: ubuntu-latest
     steps:
       - name: Install pylint
-        run: pip install pylint
+        run: apt-get update && apt-get install --yes --no-install-recommends pylint
 
       - name: Run pylint
         run: cd code && pylint app.py helpers.py
 
   publish-bookit-docker-image:
-    runs-on: python
+    runs-on: ubuntu-latest
     steps:
       - name: Login to Github Container Registry
         uses: actions/checkout@v3
