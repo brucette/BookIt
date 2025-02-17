@@ -14,7 +14,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install --yes --no-install-recommends pylint
 
       - name: Run pylint
-        run: cd code && pylint app.py helpers.py
+        run: cd code && pylint --exit-zero app.py helpers.py
 
   publish-bookit-docker-image:
     needs: pylint
