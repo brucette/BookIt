@@ -26,6 +26,7 @@ DB_FILE_PATH = '/code/database.db'
 # Global variables
 timeslots = ["10:30 - 13:30", "14:00 - 17:30", "18:30 - 23:00"]
 
+
 def get_db():
     """ Returns a sqlite3 db session"""
     return sqlite3.connect(DB_FILE_PATH)
@@ -150,13 +151,13 @@ def register():
 def login():
     """Login user"""
 
-    #Forget any user-id
+    # Forget any user-id
     session.clear()
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
-        #Ensure email was submitted
+        # Ensure email was submitted
         if not request.form.get("email"):
             return apology("must provide email", 403)
 
@@ -166,7 +167,8 @@ def login():
 
         # Query database for email
         db_connection = get_db()
-        query = f'SELECT * FROM users WHERE email="{request.form.get("email")}"'
+        query = f'SELECT * FROM users WHERE email="{
+            request.form.get("email")}"'
         result = db_connection.execute(query)
         rows = result.fetchall()
 
@@ -219,7 +221,7 @@ def dates(page):
         third_month_number = 1
     elif current_month_number == 12:
         next_month_number = 1
-        third_month_number =  next_month_number + 1
+        third_month_number = next_month_number + 1
 
     month1 = calendar.monthcalendar(year, current_month_number)
     month2 = calendar.monthcalendar(year, next_month_number)
@@ -227,10 +229,10 @@ def dates(page):
     month = month1
 
     if page == 2:
-        month=month2
+        month = month2
         month_name = calendar.month_name[next_month_number]
     elif page == 3:
-        month=month3
+        month = month3
         month_name = calendar.month_name[third_month_number]
 
     return render_template("calendar.html",
@@ -263,14 +265,14 @@ def dayview():
     current_year = currently.year
 
     # Get today's date and the current time
-    todays_date = str(today) + '/' + str(current_month_number) + '/' + str(current_year)
+    todays_date = str(today) + '/' + \
+        str(current_month_number) + '/' + str(current_year)
     t = time.localtime()
     current_time = time.strftime("%H:%M", t)
 
     # Get all made bookings from this point onwards
     db_connection = get_db()
-    query = f'SELECT * FROM user_bookings'
-    result = db_connection.execute(query)
+    result = db_connection.execute('SELECT * FROM user_bookings')
     bookings = result.fetchall()
     db_connection.commit()
     db_connection.close()
@@ -301,11 +303,11 @@ def dayview():
             timeslot_taken.append([timeslot, False])
 
     return render_template("dayview.html",
-                            todays_date=todays_date,
-                            current_time=current_time,
-                            selected_date=selected_date,
-                            bookings=bookings,
-                            timeslot_taken=timeslot_taken)
+                           todays_date=todays_date,
+                           current_time=current_time,
+                           selected_date=selected_date,
+                           bookings=bookings,
+                           timeslot_taken=timeslot_taken)
 
 
 @app.route('/confirm', methods=["GET", "POST"])
@@ -323,7 +325,8 @@ def confirm():
 
     db_connection = get_db()
 
-    query1 = f'SELECT email, first_name, apartment FROM users WHERE id="{session["user_id"]}"'
+    query1 = f'SELECT email, first_name, apartment FROM users WHERE id="{
+        session["user_id"]}"'
     result = db_connection.execute(query1)
     identifiers = result.fetchall()
     email = identifiers[0][0]
@@ -349,10 +352,10 @@ def confirm():
     db_connection.close()
 
     return render_template("confirmed.html",
-            booking_time=booking_time,
-            booking_date=booking_date,
-            current_user=current_user,
-            email=email)
+                           booking_time=booking_time,
+                           booking_date=booking_date,
+                           current_user=current_user,
+                           email=email)
 
 
 @app.route('/confirmed')
@@ -375,8 +378,7 @@ def userpage():
     email = identifiers[0][0]
 
     # Get all users' bookings
-    query3 = f'SELECT * FROM user_bookings'
-    result3 = db_connection.execute(query3)
+    result3 = db_connection.execute('SELECT * FROM user_bookings')
     all_bookings = result3.fetchall()
 
     # Commit the command
@@ -407,7 +409,8 @@ def userpage():
     today = str(currently.day)
     month = str(currently.month)
     year = str(currently.year)
-    current_date = datetime.datetime.strptime(today + "/" + month + "/" + year, "%d/%m/%Y").date()
+    current_date = datetime.datetime.strptime(
+        today + "/" + month + "/" + year, "%d/%m/%Y").date()
 
     show = new_bookings_list
 
