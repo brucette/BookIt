@@ -41,9 +41,10 @@ let cancelButtons = document.querySelectorAll(".cancel")
 
 // Add event listener to all days on the calendar view
 bookingLinks.forEach((bookingLink) => {
+  const currentPort = window.location.port;
   bookingLink.addEventListener("click", function() {
     localStorage.setItem("selectedDate", bookingLink.innerHTML);
-    document.location.href = 'http://localhost:8989/middle';     // CHANGE THIS LATER!!
+    document.location.href = `http://localhost:${currentPort}/middle`;
   })
 })
 
