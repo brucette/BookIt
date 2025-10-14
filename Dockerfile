@@ -6,6 +6,6 @@ COPY requirements.txt /code/
 WORKDIR /code
 RUN pip3 install -r requirements.txt
 
-ENV FLASK_DEBUG true
+ENV FLASK_DEBUG=true
 
 ENTRYPOINT ["/usr/local/bin/python3","/code/app.py"]

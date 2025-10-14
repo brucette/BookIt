@@ -1,9 +1,11 @@
 """ Helper functions for booking system """
 from functools import wraps
-from flask import redirect, render_template, session # type: ignore
+# pylint: disable=import-error
 from operator import itemgetter
 import sqlite3
 import datetime
+from flask import redirect, render_template, session # type: ignore
+from werkzeug.security import generate_password_hash # type: ignore
 
 def apology(message, code=400):
     """Render message as an apology to user."""
@@ -33,6 +35,59 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def validate_register_form(form):
+    """ Validate registration form and return cleaned values. """
+    form_fields = {
+        "email": "Email",
+        "password": "Password",
+        "confirmation": "Confirmation",
+        "first_name": "First name",
+        "last_name": "Last name",
+        "apartment": "Apartment number"
+    }
+
+    values = {}
+    for field, display_name in form_fields.items():
+        value = form.get(field)
+        if not value:
+            return None, f"Must provide {display_name.lower()}"
+        values[field] = value
+
+    if values["password"] != values["confirmation"]:
+        return None, "Password must match verification"
+
+    return values, None
+
+def insert_user(values):
+    """ Insert a new user and return user id and name. """
+
+    hash_password = generate_password_hash(values["password"])
+
+    db_connection = get_db()
+    cursor_obj = db_connection.cursor()
+
+    try:
+        cursor_obj.execute(
+        f'INSERT INTO users (hash, email, first_name, last_name, apartment) '
+        f'VALUES ("{hash_password}", "{values["email"]}", "{values["first_name"]}", '
+        f'"{values["last_name"]}", "{values["apartment"]}")'
+    )
+
+        db_connection.commit()
+    except sqlite3.IntegrityError:
+        db_connection.close()
+        return None, None, "Email is already registered"
+    finally:
+        db_connection.close()
+
+    db_connection = get_db()
+    query = f'SELECT * FROM users WHERE email="{values["email"]}"'
+    result = db_connection.execute(query)
+    row = result.fetchone()
+    db_connection.close()
+
+    return row[0], row[3], None
+
 def get_db():
     """ Returns a sqlite3 db session"""
     return sqlite3.connect('/code/database.db')
@@ -53,6 +108,11 @@ def normalize_booking_dates(bookings):
     return bookings
 
 def compute_timeslot_status(new_bookings_list, comp_date,selected_date, todays_date, current_time):
+    """
+    Determine the availability of each timeslot for a given day.
+
+    Checks whether each timeslot is already booked or, if the day is today,
+    whether the timeslot has already passed. """
     timeslots = ["10:30 - 13:30", "14:00 - 17:30", "18:30 - 23:00"]
     timeslot_taken = []
 

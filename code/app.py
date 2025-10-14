@@ -4,10 +4,19 @@ import calendar
 import datetime
 import time
 from os.path import exists
+# pylint: disable=import-error
 from flask import Flask, redirect, render_template, session, request # type: ignore
-from werkzeug.security import check_password_hash, generate_password_hash # type: ignore
+from werkzeug.security import check_password_hash # type: ignore
 from flask_session import Session # type: ignore
-from helpers import apology, login_required, compute_timeslot_status, get_bookings, normalize_booking_dates, sort_bookings
+from helpers import (
+  apology, login_required,
+  compute_timeslot_status,
+  insert_user,
+  get_bookings,
+  normalize_booking_dates,
+  sort_bookings,
+  validate_register_form
+)
 
 # Configure application
 app = Flask(__name__)
@@ -68,69 +77,19 @@ def index():
 def register():
     """Register user"""
 
-    # Display a form so they can register
     if request.method == "GET":
         return render_template("register.html")
 
-    form_fields = {
-        "email": "Email",
-        "password": "Password",
-        "confirmation": "Confirmation",
-        "first_name": "First name",
-        "last_name": "Last name",
-        "apartment": "Apartment number"
-    }
+    values, error = validate_register_form(request.form)
 
-    for field, display_name in form_fields.items():
-        value = request.form.get(field)
-        if not value:
-            return apology(f"Must provide {display_name.lower()}")
-        
-    password = request.form.get("password")
-    verify_password = request.form.get("confirmation")
-    if password != verify_password:
-        return apology("password must match verification")
-    
-    email = request.form.get("email")
-    first_name = request.form.get("first_name")
-    last_name = request.form.get("last_name")
-    apartment = request.form.get("apartment")
+    if error:
+        return apology(error)
 
-    hash_password = generate_password_hash(password)
+    user_id, user_name, error = insert_user(values)
 
-    # Insert new user into USERS table
-    try:
-        # Ensure email not already registered
-        db_connection = get_db()
+    session["user_id"] = user_id
+    session["user_name"] = user_name
 
-        # Create cursor object
-        cursor_obj = db_connection.cursor()
-
-        query = f'INSERT INTO users (hash, email, first_name, last_name, apartment) \
-                VALUES ("{hash_password}", "{email}", "{first_name}", "{last_name}", "{apartment}")'
-
-        cursor_obj.execute(query)
-
-        # Commit the command
-        db_connection.commit()
-
-        # Close the connection
-        db_connection.close()
-    except sqlite3.IntegrityError:
-        return apology("email is already registered")
-    finally:
-        db_connection.close()
-  
-    db_connection = get_db()
-    query = f'SELECT * FROM users WHERE email="{email}"'
-    result = db_connection.execute(query)
-    rows = result.fetchall()
-    db_connection.close()
-
-    session["user_id"] = rows[0][0]
-    session["user_name"] = rows[0][3]
-
-    # Redirect user to home page
     return redirect("/welcome")
 
 
@@ -256,7 +215,8 @@ def dayview():
     new_bookings_list = normalize_booking_dates(bookings)
 
     # Empty list for adding timeslot types
-    timeslot_taken = compute_timeslot_status(new_bookings_list, comp_date,selected_date, todays_date, current_time)
+    timeslot_taken = compute_timeslot_status(
+        new_bookings_list, comp_date,selected_date, todays_date, current_time)
 
     return render_template("dayview.html",
                             todays_date=todays_date,
