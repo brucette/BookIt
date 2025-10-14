@@ -3,12 +3,11 @@ import sqlite3
 import calendar
 import datetime
 import time
-from operator import itemgetter
 from os.path import exists
-from flask import Flask, redirect, render_template, session, request
-from werkzeug.security import check_password_hash, generate_password_hash
-from flask_session import Session
-from helpers import apology, login_required
+from flask import Flask, redirect, render_template, session, request # type: ignore
+from werkzeug.security import check_password_hash, generate_password_hash # type: ignore
+from flask_session import Session # type: ignore
+from helpers import apology, login_required, compute_timeslot_status, get_bookings, normalize_booking_dates, sort_bookings
 
 # Configure application
 app = Flask(__name__)
@@ -22,9 +21,6 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 DB_FILE_PATH = '/code/database.db'
-
-# Global variables
-timeslots = ["10:30 - 13:30", "14:00 - 17:30", "18:30 - 23:00"]
 
 def get_db():
     """ Returns a sqlite3 db session"""
@@ -76,37 +72,29 @@ def register():
     if request.method == "GET":
         return render_template("register.html")
 
-    # Check for possible errors
-    email = request.form.get("email")
+    form_fields = {
+        "email": "Email",
+        "password": "Password",
+        "confirmation": "Confirmation",
+        "first_name": "First name",
+        "last_name": "Last name",
+        "apartment": "Apartment number"
+    }
+
+    for field, display_name in form_fields.items():
+        value = request.form.get(field)
+        if not value:
+            return apology(f"Must provide {display_name.lower()}")
+        
     password = request.form.get("password")
     verify_password = request.form.get("confirmation")
+    if password != verify_password:
+        return apology("password must match verification")
+    
+    email = request.form.get("email")
     first_name = request.form.get("first_name")
     last_name = request.form.get("last_name")
     apartment = request.form.get("apartment")
-
-    # Ensure email was submitted
-    if not email:
-        return apology("must provide email")
-
-    # Ensure password was submitted
-    if not password:
-        return apology("must provide password")
-
-    # Ensure password matches verification
-    if not verify_password or password != verify_password:
-        return apology("password must match verification")
-
-    # Ensure first name was submitted
-    if not first_name:
-        return apology("must provide first name")
-
-    # Ensure last name was submitted
-    if not last_name:
-        return apology("must provide last name")
-
-    # Ensure apartment number was submitted
-    if not apartment:
-        return apology("must provide apartment number")
 
     hash_password = generate_password_hash(password)
 
@@ -128,21 +116,22 @@ def register():
 
         # Close the connection
         db_connection.close()
-    except:
-        db_connection.close()
+    except sqlite3.IntegrityError:
         return apology("email is already registered")
-    else:
-        db_connection = get_db()
-        query = f'SELECT * FROM users WHERE email="{email}"'
-        result = db_connection.execute(query)
-        rows = result.fetchall()
+    finally:
         db_connection.close()
+  
+    db_connection = get_db()
+    query = f'SELECT * FROM users WHERE email="{email}"'
+    result = db_connection.execute(query)
+    rows = result.fetchall()
+    db_connection.close()
 
-        session["user_id"] = rows[0][0]
-        session["user_name"] = rows[0][3]
+    session["user_id"] = rows[0][0]
+    session["user_name"] = rows[0][3]
 
-        # Redirect user to home page
-        return redirect("/welcome")
+    # Redirect user to home page
+    return redirect("/welcome")
 
 
 # LOGIN ROUTE
@@ -257,48 +246,17 @@ def dayview():
     # Convert selected date into a datetime date to make comparing and sorting possible
     comp_date = datetime.datetime.strptime(selected_date, "%d/%m/%Y").date()
 
-    currently = datetime.date.today()
-    today = currently.day
-    current_month_number = currently.month
-    current_year = currently.year
+    today = datetime.date.today()
+    todays_date = f"{today.day}/{today.month}/{today.year}"
+    current_time = time.strftime("%H:%M", time.localtime())
 
-    # Get today's date and the current time
-    todays_date = str(today) + '/' + str(current_month_number) + '/' + str(current_year)
-    t = time.localtime()
-    current_time = time.strftime("%H:%M", t)
-
-    # Get all made bookings from this point onwards
-    db_connection = get_db()
-    query = f'SELECT * FROM user_bookings'
-    result = db_connection.execute(query)
-    bookings = result.fetchall()
-    db_connection.commit()
-    db_connection.close()
+    bookings = get_bookings()
 
     # Replace dates in booking with a datetime date to make sorting possible
-    new_bookings_list = []
-
-    for item in bookings:
-        temp = list(item)
-        new_bookings_list.append(temp)
-
-    for item in new_bookings_list:
-        item[5] = datetime.datetime.strptime(item[5], "%d/%m/%Y").date()
+    new_bookings_list = normalize_booking_dates(bookings)
 
     # Empty list for adding timeslot types
-    timeslot_taken = []
-
-    # Check whether date and time already taken
-    for timeslot in timeslots:
-        for item in new_bookings_list:
-            if item[5] == comp_date and item[4] == timeslot:
-                timeslot_taken.append([timeslot, True])
-                break
-            elif selected_date == todays_date and current_time > timeslot:
-                timeslot_taken.append([timeslot, True])
-                break
-        else:
-            timeslot_taken.append([timeslot, False])
+    timeslot_taken = compute_timeslot_status(new_bookings_list, comp_date,selected_date, todays_date, current_time)
 
     return render_template("dayview.html",
                             todays_date=todays_date,
@@ -374,10 +332,7 @@ def userpage():
     identifiers = result1.fetchall()
     email = identifiers[0][0]
 
-    # Get all users' bookings
-    query3 = f'SELECT * FROM user_bookings'
-    result3 = db_connection.execute(query3)
-    all_bookings = result3.fetchall()
+    all_bookings = sort_bookings(normalize_booking_dates(get_bookings()))
 
     # Commit the command
     db_connection.commit()
@@ -385,49 +340,27 @@ def userpage():
     # Close the connection
     db_connection.close()
 
-    new_bookings_list = []
-
-    # Change tuples into lists to allow re-assignment of dates to datetime dates
-    for item in all_bookings:
-        temp = list(item)
-        new_bookings_list.append(temp)
-
-    # Replace dates in all_bookings with a datetime date to make sorting possible
-    for item in new_bookings_list:
-        item[5] = datetime.datetime.strptime(item[5], "%d/%m/%Y").date()
-
-    # Sort all bookings by date
-    new_bookings_list.sort(key=itemgetter(5, 4))
-    new_bookings_list.reverse()
-
     # Filter the new_bookings_list to only include current user's bookings
-    user_bookings = [x for x in new_bookings_list if x[1] == email]
+    user_bookings = [b for b in all_bookings if b[1] == email]
 
-    currently = datetime.date.today()
-    today = str(currently.day)
-    month = str(currently.month)
-    year = str(currently.year)
-    current_date = datetime.datetime.strptime(today + "/" + month + "/" + year, "%d/%m/%Y").date()
+    current_date = datetime.date.today()
+    today = str(current_date.day)
 
-    show = new_bookings_list
+    show = all_bookings
 
     if request.method == "POST":
         selected_row = request.form.get("selectedRow")
-
         select_bookings = request.form.get("select_bookings")
 
-        if selected_row is not None:
+        if selected_row:
             db_connection = get_db()
             query = f'DELETE FROM user_bookings WHERE id="{selected_row}"'
             db_connection.execute(query)
             db_connection.commit()
             db_connection.close()
 
-        if select_bookings is not None:
-            if select_bookings == "All bookings":
-                show = new_bookings_list
-            else:
-                show = user_bookings
+        if select_bookings:
+            show = all_bookings if select_bookings == "All bookings" else user_bookings
 
     return render_template("bookings.html",
                            show=show,
